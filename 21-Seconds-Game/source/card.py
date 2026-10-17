@@ -8,7 +8,6 @@ class Suit(StrEnum):
   SPADE = 'Spades'
 
 class CardType(StrEnum):
-  ONE = '1'
   TWO = '2'
   THREE = '3'
   FOUR = '4'
