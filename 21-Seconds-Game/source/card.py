@@ -34,11 +34,20 @@ class CardType(StrEnum):
 class Card(ABC):
   @property
   @abstractmethod
-  def type(self) -> CardType: pass
+  def suit(self) -> Suit:
+    """The suit of the card."""
+    pass
+
+  @property
+  @abstractmethod
+  def type(self) -> CardType:
+    """The type of card."""
+    pass
 
   @property
   @abstractmethod
   def score(self) -> int:
+    """The value of the card."""
     pass
 
 class BaseCard(Card):
@@ -50,12 +59,16 @@ class BaseCard(Card):
     self._type = type
 
   @property
-  def score(self) -> int:
-    return self._type.num_value
+  def suit(self) -> Suit:
+    return self._suit
 
   @property
   def type(self) -> CardType:
     return self._type
+
+  @property
+  def score(self) -> int:
+    return self._type.num_value
 
   @property
   def name(self) -> str:
