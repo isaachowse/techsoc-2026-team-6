@@ -9,9 +9,16 @@ class Display():
     def __init__(self, blackjack):
         self.blackjack = blackjack
 
-    def display_card(self, card):
-        print(card.name)
-        print("hello")
+    def display_card(self, card, screen):
+        #print("Called")
+        font = pygame.font.Font('freesansbold.ttf', 32)
+        text = font.render(card.name, True, (0, 255, 0), (0, 0, 128))
+        textRect = text.get_rect()
+        textRect.center = (500, 250)
+        screen.blit(text, textRect)
+
+        #print(card.name)
+        #print("hello")
 
     def start(self):
         pygame.init()
@@ -42,7 +49,7 @@ class Display():
                         if homeScreen:
                             homeScreen = False
                         else:
-                            aKey()
+                            self.aKey(screen)
                     elif event.key == K_l:
                         running = False
                 if event.type == QUIT:
@@ -54,12 +61,14 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
-                self.display_card(card.BaseCard(suit=card.Suit.HEART, type=card.CardType.ONE))
+                #self.display_card(card.BaseCard(suit=card.Suit.HEART, type=card.CardType.ONE), screen)
                 hitButton.draw(screen)
                 standButton.draw(screen)
 
             pygame.display.update()
         pygame.quit()
 
-    def aKey(self):
-        pass
+    def aKey(self, screen):
+        self.display_card(card.BaseCard(suit=card.Suit.HEART, type=card.CardType.ONE), screen)
+        #self.blackjack.newHand()
+
