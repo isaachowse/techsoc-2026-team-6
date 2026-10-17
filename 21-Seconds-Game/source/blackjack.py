@@ -37,10 +37,12 @@ class Blackjack:
   player: Hand
   _wild: bool
   _deck: list[Card]
+  _wildDeck: list[int]
 
   def __init__(self) -> None:
     self.dealer = Hand()
     self.player = Hand()
+    self._wildDeck = self.createWildDeck()
     self.newHand()
 
   def newHand(self) -> None:
@@ -48,9 +50,19 @@ class Blackjack:
     self.shuffle(self._deck)
     self._deal()
 
+  def getWildDeck(self) -> list[int]:
+    return self._wildDeck
+
+  def getWild(self) -> bool:
+    return self._wild
+
   def hit(self, hand: Hand) -> None:
-    card = self._deck.pop()
-    hand.add(card)
+    if self.getWild == False:
+      card = self._deck.pop()
+      hand.add(card)
+    else:
+      card = self._deck.pop()
+      card = self.wildCard()
 
   def _deal(self) -> None:
     for hand in (self.player, self.dealer):
@@ -73,6 +85,6 @@ class Blackjack:
     return deck
 
   def isNextWild():
-    if None:
+    if random.randint(0,4) == 1:
       return True
     return False
