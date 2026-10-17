@@ -9,8 +9,9 @@ class Display():
     def __init__(self, blackjack):
         self.blackjack = blackjack
 
-    def display_card(self, card: card.BaseCard):
+    def display_card(self, card):
         print(card.name)
+        print("hello")
 
     def start(self):
         pygame.init()
@@ -53,7 +54,7 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
-                self.display_card(self, card.BaseCard(suit=card.Suit.HEART, type=card.CardType.ONE))
+                self.display_card(card.BaseCard(suit=card.Suit.HEART, type=card.CardType.ONE))
                 hitButton.draw(screen)
                 standButton.draw(screen)
 
