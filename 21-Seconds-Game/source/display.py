@@ -33,13 +33,16 @@ class Display():
         while running:
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
-                    if event.key == K_a and not playButton.disabled:
-                        if homeScreen:
+                    if event.key == K_a:
+                        if homeScreen and not playButton.disabled:
                             homeScreen = False
-                        else:
+                        elif not hitButton.disabled:
                             aKey()
-                    elif event.key == K_l and not playButton.disabled:
-                        running = False
+                    elif event.key == K_l:
+                        if homeScreen and not exitButton.disabled:
+                          running = False
+                        elif not standButton.disabled:
+                          ...
                 if event.type == QUIT:
                     running = False
 
