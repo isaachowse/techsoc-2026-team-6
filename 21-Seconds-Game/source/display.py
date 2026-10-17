@@ -1,6 +1,7 @@
 import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
+from card import Card
 
 def start():
     pygame.init()
@@ -41,8 +42,13 @@ def start():
             exitButton.draw(screen)
         else:
             loadGameScreen(screen, buttons)
+            displayCard(screen, Card)
         pygame.display.update()
     pygame.quit()
+
+def displayCard(Screen, Card):
+    print(card.type)
+
 
 def loadGameScreen(screen, buttons):
     buttons[2].draw(screen)
