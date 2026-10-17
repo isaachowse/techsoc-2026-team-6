@@ -3,6 +3,7 @@ from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack
 import card
+import random  
 
 class Display():
 
@@ -16,6 +17,7 @@ class Display():
 
     def start(self):
         pygame.init()
+        
         (width, height) = (1000, 500)
         screen = pygame.display.set_mode((width, height))
         backgroundColour = [53, 101, 77]
@@ -43,11 +45,16 @@ class Display():
                 if event.type == KEYDOWN:
                     if event.key == K_a:
                         if homeScreen:
+                            pygame.mixer.music.load("21-Seconds-Game/sounds/sfx/press_1.wav")
+                            pygame.mixer.music.play()
                             homeScreen = False
                         else:
                             self.aKey()
                     elif event.key == K_l:
-                        running = False
+                        if homeScreen:
+                            running = False
+                        else:
+                            self.lKey()
                 if event.type == QUIT:
                     running = False
 
@@ -87,6 +94,14 @@ class Display():
 
     def aKey(self):
         self.blackjack.hit(self.player)
+        deal_sound = random.randint(1, 3)
+        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
+        pygame.mixer.music.play()
+
+    def lKey(self):
+        #self.blackjack.stand(self.player)
+        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
+        pygame.mixer.music.play()
 
     def loadCardImage(self, card):
         suit = card.suit.name.lower() + "s"
