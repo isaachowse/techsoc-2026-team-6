@@ -39,7 +39,11 @@ class Card(ABC):
 
   @property
   @abstractmethod
-  def value(self) -> int: pass
+  def type(self) -> CardType: pass
+
+  @property
+  def value(self) -> int:
+    return self.type.num_value
 
 class BaseCard(Card):
   _suit: Suit
@@ -56,12 +60,12 @@ class BaseCard(Card):
     return super().applyEffect()
 
   @property
-  def name(self) -> str:
-    return f"{self._type.name.title()} of {self._suit.value}"
+  def type(self) -> CardType:
+    return self._type
 
   @property
-  def value(self) -> int:
-    return self._type.num_value
+  def name(self) -> str:
+    return f"{self._type.name.title()} of {self._suit.value}"
 
   def __str__(self) -> str:
     return self.name

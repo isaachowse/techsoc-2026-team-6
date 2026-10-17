@@ -14,9 +14,19 @@ class Hand:
     self._cards.clear()
 
   @property
-  def is_bust(self) -> bool:
+  def value(self) -> int:
     total = sum(card.value for card in self._cards)
-    return total > 21
+    ace_count = sum(1 for card in self._cards if card.type == CardType.ACE)
+
+    while total > 21 and ace_count > 0:
+      total -= CardType.ACE.num_value
+      ace_count -= 1
+
+    return total
+
+  @property
+  def is_bust(self) -> bool:
+    return self.value > 21
 
   def __str__(self) -> str:
     return str(list(map(str, self._cards)))
