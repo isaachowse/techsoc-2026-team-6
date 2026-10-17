@@ -46,4 +46,15 @@ def button_animation (screen, button, colour, glowing):
         pygame.draw.rect(screen, button, glow, border_radius=12)
 
     pygame.draw.react(screen, button, glow, border_radius=10)
-        
+
+
+def score_flash_animation (score, timer, font):
+
+    if timer > 0:
+        colour = (255,255, 0)
+    else:
+        colour = (255, 255, 255)
+
+    text = font.render(str(score), True, colour)
+
+    return text 
