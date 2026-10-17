@@ -31,8 +31,8 @@ class Display():
 
         playButton = Button(150, 250, playImage, 6)
         exitButton = Button(550, 250, exitImage, 6)
-        hitButton = Button(150, 250, hitImage, 6)
-        standButton = Button(550, 250, standImage, 6)
+        hitButton = Button(150, 388, hitImage, 6)
+        standButton = Button(550, 388, standImage, 6)
         buttons = [playButton, exitButton, hitButton, standButton]
 
         pygame.display.flip()
@@ -65,6 +65,7 @@ class Display():
                     cardImage = self.loadCardImage(newCard)
                     screen.blit(cardImage, (100 + offset, 100))
                     offset += 100
+                pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
                 hitButton.draw(screen)
                 standButton.draw(screen)
 
