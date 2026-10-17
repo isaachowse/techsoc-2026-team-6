@@ -100,19 +100,30 @@ class Blackjack:
   def setCurrentWildCard(self, newVal:int) -> None:
     self._cur_WildCard = newVal
 
+  def checkDeck(self) -> bool:
+    if self._deck:
+      return True
+    return False
+
   def hit(self, hand: Hand) -> None:
+
+    #check if next card should be wildcard
     self.setWild(self.isNextWild())
-    if self.getWild == False:
+
+    #check if deck is empty
+    if self.checkDeck() == False:
+      self.newHand()
+
+    if self.getWild() == False:
       card = self._deck.pop()
       hand.add(card)
-      print("hitF")
     else:
       card = self._deck.pop()
       card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
       hand.add(card)
-      print("hitT")
     if self.hits == 0:
       self.stands += 1
+    print(card.score,card.type)
 
   def _deal(self) -> None:
     for hand in (self.player, self.dealer):
@@ -126,7 +137,7 @@ class Blackjack:
     return MultEffect(nextCard,wildDeck[wildCard])
 
   def createWildDeck(self) -> list[int]:
-    return [5,2,15,4,30,8,300,16,600,24,1000]
+    return [5,2,15,3,30,4,300,5,600,6,800,12]
 
   def shuffle(self, deck:list[BaseCard]) -> list[BaseCard]:
     for i in range(len(deck)-1,0,-1):
