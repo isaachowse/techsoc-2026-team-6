@@ -17,8 +17,8 @@ def start():
 
     playButton = Button(150, 250, playImage, 6)
     exitButton = Button(550, 250, exitImage, 6)
-    hitButton = Button(150, 350, hitImage, 6)
-    standButton = Button(550, 350, standImage, 6)
+    hitButton = Button(150, 250, hitImage, 6)
+    standButton = Button(550, 250, standImage, 6)
     buttons = [playButton, exitButton, hitButton, standButton]
 
     pygame.display.flip()
@@ -28,7 +28,10 @@ def start():
         for event in pygame.event.get():
             if event.type == KEYDOWN:
                 if event.key == K_a:
-                    homeScreen = not homeScreen
+                    if homeScreen:
+                        homeScreen = False
+                    else:
+                        aKey()
                 elif event.key == K_l:
                     running = False
             if event.type == QUIT:
@@ -40,14 +43,14 @@ def start():
             playButton.draw(screen)
             exitButton.draw(screen)
         else:
-            loadGameScreen(screen, buttons)
+            hitButton.draw(screen)
+            standButton.draw(screen)
         pygame.display.update()
     pygame.quit()
 
-def loadGameScreen(screen, buttons):
-    buttons[2].draw(screen)
-    buttons[3].draw(screen)
-    pygame.display.update()
+def aKey():
+    pass
+        
 
 
 

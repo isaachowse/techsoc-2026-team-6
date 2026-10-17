@@ -20,4 +20,4 @@ def start():
 
 if __name__ == "__main__":
     pygame.init()
-    start()
+    display.start()
