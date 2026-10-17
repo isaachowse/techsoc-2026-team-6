@@ -49,7 +49,10 @@ class Display():
                         else:
                             self.aKey()
                     elif event.key == K_l:
-                        running = False
+                        if homeScreen:
+                            running = False
+                        else:
+                            self.lKey()
                 if event.type == QUIT:
                     running = False
 
@@ -76,6 +79,11 @@ class Display():
         self.blackjack.hit(self.player)
         deal_sound = random.randint(1, 3)
         pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
+        pygame.mixer.music.play()
+
+    def lKey(self):
+        #self.blackjack.stand(self.player)
+        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
         pygame.mixer.music.play()
 
     def loadCardImage(self, card):
