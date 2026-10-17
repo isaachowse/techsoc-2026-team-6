@@ -1,5 +1,5 @@
 import pygame
-from player import Dealer, Player
+from blackjack import Blackjack
 
 def start():
     pygame.init()
@@ -7,15 +7,10 @@ def start():
     screen = pygame.display.set_mode((width, height))
     pygame.display.flip()
 
-    dealer = Dealer()
-    player = Player()
-
-    dealer.deal(dealer)
-    dealer.deal(player)
-
-    print(player)
-    dealer.hit(player)
-    print(player)
+    game = Blackjack()
+    print(game.player, game.dealer)
+    game.newHand()
+    print(game.player, game.dealer)
 
     running = True
     while running:
