@@ -35,15 +35,14 @@ class Blackjack:
   def newHand(self) -> None:
     self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
     random.shuffle(self._deck)
-
-    self.deal(self.dealer)
-    self.deal(self.player)
+    self.deal()
 
   def hit(self, hand: Hand) -> None:
     card = self._deck.pop()
     hand.add(card)
 
-  def deal(self, hand: Hand) -> None:
-    hand.reset()
-    self.hit(hand)
-    self.hit(hand)
+  def deal(self) -> None:
+    for hand in [self.player, self.dealer]:
+      hand.reset()
+      self.hit(hand)
+      self.hit(hand)
