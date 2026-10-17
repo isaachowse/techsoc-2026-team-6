@@ -58,7 +58,7 @@ class BaseCard(Card):
     return self._suit.name.title()
 
   def __str__(self) -> str:
-    return f"{self._type} of {self._suit}"
+    return f"{self.name} of {self.suit_name}"
 
   def getCard(self, suit, type) -> 'BaseCard':
     return BaseCard(suit, type)

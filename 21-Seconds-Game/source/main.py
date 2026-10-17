@@ -8,6 +8,8 @@ def start():
 
     game = Blackjack()
     print(game.player, game.dealer)
+    game.newHand()
+    print(game.player, game.dealer)
 
     running = True
     while running:
