@@ -1,10 +1,20 @@
 import pygame
-from cards import Card
+from player import Dealer, Player
 
 def start():
     (width, height) = (300, 200)
     screen = pygame.display.set_mode((width, height))
     pygame.display.flip()
+
+    dealer = Dealer()
+    player = Player()
+
+    dealer.deal(dealer)
+    dealer.deal(player)
+
+    print(player)
+    dealer.hit(player)
+    print(player)
 
     running = True
     while running:
@@ -12,15 +22,6 @@ def start():
             if event.type == pygame.QUIT:
                 running = False
 
-def initialiseCards():
-    cards = []
-    for type in  ["Clubs", "Diamonds", "Hearts", "Spades"]:
-        for i in range(1, 14):
-            card = Card(type, i)
-            cards.append(card)
-    return cards
-
-def main():
+if __name__ == "__main__":
     pygame.init()
     start()
-    cards = initialiseCards()
