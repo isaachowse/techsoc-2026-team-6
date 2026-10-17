@@ -2,11 +2,17 @@ import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack
+import card
 
 class Display():
 
     def __init__(self, blackjack):
         self.blackjack = blackjack
+        self.player = self.blackjack.player
+        self.dealer = self.blackjack.dealer
+
+    def display_card(self, card):
+        return card
 
     def start(self):
         pygame.init()
@@ -23,8 +29,8 @@ class Display():
 
         playButton = Button(150, 250, playImage, 6)
         exitButton = Button(550, 250, exitImage, 6)
-        hitButton = Button(150, 250, hitImage, 6)
-        standButton = Button(550, 250, standImage, 6)
+        hitButton = Button(150, 388, hitImage, 6)
+        standButton = Button(550, 388, standImage, 6)
         buttons = [playButton, exitButton, hitButton, standButton]
 
         pygame.display.flip()
@@ -52,10 +58,30 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
+                offset = 0
+                for card in self.blackjack.player._cards:
+                    newCard = self.display_card(card)
+                    cardImage = self.loadCardImage(newCard)
+                    screen.blit(cardImage, (100 + offset, 100))
+                    offset += 100
+                pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
                 hitButton.draw(screen)
                 standButton.draw(screen)
+
             pygame.display.update()
         pygame.quit()
 
     def aKey(self):
-        pass
+        self.blackjack.hit(self.player)
+
+    def loadCardImage(self, card):
+        suit = card.suit.name.lower() + "s"
+        try:
+            int(card.type.value)
+            type = f"{int(card.type.value):02d}"
+        except ValueError:
+            type = card.type.value[0].upper()
+        imagePath = f"21-Seconds-Game/assets/Cards/PNG/cards-large/card_{suit}_{type}.png"
+        cardImage = pygame.image.load(imagePath).convert_alpha()
+        cardImage = pygame.transform.scale(cardImage, (int(cardImage.get_width())*2, int(cardImage.get_height())*2))
+        return cardImage
