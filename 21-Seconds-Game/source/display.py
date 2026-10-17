@@ -12,8 +12,7 @@ class Display():
         self.dealer = self.blackjack.dealer
 
     def display_card(self, card):
-        print(card.name)
-        print("hello")
+        return card
 
     def start(self):
         pygame.init()
@@ -56,7 +55,12 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
-                self.display_card(card.BaseCard(suit=card.Suit.HEART, type=card.CardType.ONE))
+                offset = 0
+                for card in self.blackjack.player._cards:
+                    newCard = self.display_card(card)
+                    cardImage = self.loadCardImage(newCard)
+                    screen.blit(cardImage, (100 + offset, 100))
+                    offset += 100
                 hitButton.draw(screen)
                 standButton.draw(screen)
 
@@ -65,4 +69,15 @@ class Display():
 
     def aKey(self):
         self.blackjack.hit(self.player)
-        
+
+    def loadCardImage(self, card):
+        suit = card.suit.name.lower() + "s"
+        try:
+            int(card.type.value)
+            type = f"{int(card.type.value):02d}"
+        except ValueError:
+            type = card.type.value[0].upper()
+        imagePath = f"21-Seconds-Game/assets/Cards/PNG/cards-large/card_{suit}_{type}.png"
+        cardImage = pygame.image.load(imagePath).convert_alpha()
+        cardImage = pygame.transform.scale(cardImage, (int(cardImage.get_width())*2, int(cardImage.get_height())*2))
+        return cardImage
