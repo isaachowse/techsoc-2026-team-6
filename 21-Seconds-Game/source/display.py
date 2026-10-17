@@ -31,7 +31,9 @@ class Display():
         exitButton = Button(550, 250, exitImage, 6)
         hitButton = Button(150, 388, hitImage, 6)
         standButton = Button(550, 388, standImage, 6)
-        buttons = [playButton, exitButton, hitButton, standButton]
+
+        dealerImage = pygame.image.load("21-Seconds-Game/assets/Dealer.png").convert_alpha()
+        dealerImage = pygame.transform.scale(dealerImage, (int(dealerImage.get_width())*0.3, int(dealerImage.get_height())*0.3))
 
         pygame.display.flip()
 
@@ -55,16 +57,31 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
-                offset = 0
-                for card in self.blackjack.player._cards:
-                    newCard = self.display_card(card)
-                    cardImage = self.loadCardImage(newCard)
-                    screen.blit(cardImage, (100 + offset, 100))
-                    offset += 100
+                bigOffset = 0
+                smallOffset = 0
+                if len(self.blackjack.player._cards) < 5:
+                    for card in self.blackjack.player._cards:
+                        newCard = self.display_card(card)
+                        cardImage = self.loadCardImage(newCard)
+                        screen.blit(cardImage, (0 + bigOffset, 265))
+                        bigOffset += 100
+                else:
+                    for card in self.blackjack.player._cards[: len(self.blackjack.player._cards) - 3]:
+                        newCard = self.display_card(card)
+                        cardImage = self.loadCardImage(newCard)
+                        screen.blit(cardImage, (0 + smallOffset, 265))
+                        smallOffset += 25
+                        bigOffset += 25
+                    for card in self.blackjack.player._cards[len(self.blackjack.player._cards) - 3:]:
+                        newCard = self.display_card(card)
+                        cardImage = self.loadCardImage(newCard)
+                        screen.blit(cardImage, (0 + bigOffset, 265))
+                        bigOffset += 100
+
                 pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
                 hitButton.draw(screen)
                 standButton.draw(screen)
-
+                screen.blit(dealerImage, (400, 0))
             pygame.display.update()
         pygame.quit()
 
