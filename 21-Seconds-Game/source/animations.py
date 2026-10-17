@@ -37,3 +37,13 @@ def flip_card (card_back, card_front, progress):
     new_width = max(1, new_width)
 
     flipped_card = pygame.transform.scale(image(new_width, height))
+
+
+def button_animation (screen, button, colour, glowing):
+
+    if glowing:
+        glow = button. inflate(15, 15)
+        pygame.draw.rect(screen, button, glow, border_radius=12)
+
+    pygame.draw.react(screen, button, glow, border_radius=10)
+        
