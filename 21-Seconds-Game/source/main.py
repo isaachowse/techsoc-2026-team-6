@@ -2,7 +2,8 @@ import pygame
 from blackjack import Blackjack
 
 def start():
-    (width, height) = (300, 200)
+    pygame.init()
+    (width, height) = (1000, 500)
     screen = pygame.display.set_mode((width, height))
     pygame.display.flip()
 
