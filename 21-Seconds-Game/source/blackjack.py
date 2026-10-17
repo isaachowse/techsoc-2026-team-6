@@ -1,0 +1,47 @@
+from card import BaseCard, Card, CardType, Suit
+import random
+
+class Hand:
+  _cards: list[Card]
+
+  def __init__(self) -> None:
+    self._cards = []
+
+  def add(self, card: Card) -> None:
+    self._cards.append(card)
+
+  def reset(self) -> None:
+    self._cards.clear()
+
+  def __str__(self) -> str:
+    return str(list(map(str, self._cards)))
+
+def new_deck() -> list[Card]:
+  deck: list[Card] = [BaseCard(suit, type) for type in CardType for suit in Suit]
+  random.shuffle(deck)
+  return deck
+
+class Blackjack:
+  dealer: Hand
+  player: Hand
+
+  _deck: list[Card]
+
+  def __init__(self) -> None:
+    self.dealer = Hand()
+    self.player = Hand()
+    self.newHand()
+
+  def newHand(self) -> None:
+    self._deck = new_deck()
+    self.deal(self.dealer)
+    self.deal(self.player)
+
+  def hit(self, hand: Hand) -> None:
+    card = self._deck.pop()
+    hand.add(card)
+
+  def deal(self, hand: Hand) -> None:
+    hand.reset()
+    self.hit(hand)
+    self.hit(hand)

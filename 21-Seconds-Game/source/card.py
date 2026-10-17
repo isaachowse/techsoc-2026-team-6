@@ -25,8 +25,11 @@ class CardType(Enum):
 
 class Card(ABC):
   @abstractmethod
-  def applyEffect(self) -> None:
-    pass
+  def applyEffect(self) -> None: pass
+
+  @property
+  @abstractmethod
+  def value(self) -> int: pass
 
 class BaseCard(Card):
   _suit: Suit
@@ -68,4 +71,3 @@ class BaseCard(Card):
 
   def getLargeImage(self) -> str:
     return f"21-Seconds-Game/assets/Cards/PNG/cards-large/card_{self._suit.name.lower()}_{self._type.value:02d}.png"
-  
