@@ -8,3 +8,6 @@ class GameGUI:
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode((width, height))
+
+game = GameGUI
+game.run()
