@@ -25,7 +25,6 @@ def shuffle(deck:list[BaseCard]) -> list[BaseCard]:
     return deck
 
 if __name__ == "__main__":
-    pygame.init()
     game = Blackjack()
     print(game.dealer, game.player)
     display = Display(game)
