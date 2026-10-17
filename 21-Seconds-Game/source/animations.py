@@ -68,7 +68,7 @@ def result_animation(result, size, font):
         
     elif result == "loss":
         message = "you lost, mb :\"
-        colour = (255. 0, 0)
+        colour = (255, 0, 0)
         
     else: 
         return None 

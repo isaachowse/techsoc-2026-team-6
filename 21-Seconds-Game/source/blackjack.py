@@ -1,4 +1,5 @@
 from card import BaseCard, Card, CardType, Suit
+from effect import MultEffect, AddEffect
 import random
 
 class Hand:
@@ -15,12 +16,12 @@ class Hand:
 
   @property
   def value(self) -> int:
-    total = sum(card.value for card in self._cards)
-    ace_count = sum(1 for card in self._cards if card.type == CardType.ACE)
+    total = sum(card.score for card in self._cards)
+    aces = sum(1 for card in self._cards if card.type == CardType.ACE)
 
-    while total > 21 and ace_count > 0:
+    while total > 21 and aces > 0:
       total -= CardType.ACE.num_value
-      ace_count -= 1
+      aces -= 1
 
     return total
 
@@ -29,12 +30,11 @@ class Hand:
     return self.value > 21
 
   def __str__(self) -> str:
-    return str(list(map(str, self._cards)))
+    return f"{list(map(str, self._cards))} ({self.value})"
 
 class Blackjack:
   dealer: Hand
   player: Hand
-
   _deck: list[Card]
 
   def __init__(self) -> None:
@@ -43,7 +43,7 @@ class Blackjack:
     self.newHand()
 
   def newHand(self) -> None:
-    self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    self._deck = [MultEffect(AddEffect(BaseCard(suit, type), random.randint(1, 3)), 2) for type in CardType for suit in Suit]
     random.shuffle(self._deck)
     self._deal()
 
