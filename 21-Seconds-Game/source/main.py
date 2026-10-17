@@ -3,7 +3,8 @@ from card import BaseCard, Suit, CardType
 from effect import EffectDec, BaseValueEffect, MultEffect, AddEffect
 
 def start():
-    (width, height) = (300, 200)
+    pygame.init()
+    (width, height) = (1000, 500)
     screen = pygame.display.set_mode((width, height))
     pygame.display.flip()
 
@@ -24,24 +25,6 @@ def start():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-def createDeck() -> list[BaseCard]:
-  deck = []
-
-  for suit in Suit:
-    for type in CardType:
-      deck.append(BaseCard(suit, type))
-
-  return deck
-
-def wildCard(wildDeck:list[int], wildCard:int, nextCard:BaseCard) -> None:
-    if (wildCard % 2 == 0):
-       nextCard = AddEffect(nextCard,wildDeck[wildCard]).applyEffect()
-    else:
-       nextCard = MultEffect(nextCard,wildDeck[wildCard]).applyEffect()
-
-def createWildDeck() -> list[int]:
-   return [5,2,15,4]
 
 if __name__ == "__main__":
     pygame.init()

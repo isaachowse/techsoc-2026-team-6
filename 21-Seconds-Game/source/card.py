@@ -1,32 +1,45 @@
 from abc import ABC, abstractmethod
-from enum import Enum
+from enum import StrEnum
+from typing import override
 
 
-class Suit(Enum):
-  DIAMOND = 0
-  CLUB = 1
-  HEART = 2
-  SPADE = 3
+class Suit(StrEnum):
+  DIAMOND = 'Diamonds'
+  CLUB = 'Clubs'
+  HEART = 'Hearts'
+  SPADE = 'Spades'
 
-class CardType(Enum):
-  ACE = 1
-  TWO = 2
-  THREE = 3
-  FOUR = 4
-  FIVE = 5
-  SIX = 6
-  SEVEN = 7
-  EIGHT = 8
-  NINE = 9
-  TEN = 10
-  JACK = 11
-  QUEEN = 12
-  KING = 13
+class CardType(StrEnum):
+  ONE = '1'
+  TWO = '2'
+  THREE = '3'
+  FOUR = '4'
+  FIVE = '5'
+  SIX = '6'
+  SEVEN = '7'
+  EIGHT = '8'
+  NINE = '9'
+  TEN = '10'
+  JACK = 'Jack'
+  QUEEN = 'Queen'
+  KING = 'King'
+  ACE = 'Ace'
+
+  @property
+  def num_value(self) -> int:
+    try:
+      return int(self.value)
+    except ValueError:
+      return 11 if self == CardType.ACE else 10
+
 
 class Card(ABC):
   @abstractmethod
-  def applyEffect(self) -> None:
-    pass
+  def applyEffect(self) -> None: pass
+
+  @property
+  @abstractmethod
+  def type(self) -> CardType: pass
 
   @abstractmethod
   def getValue(self) -> int:
@@ -54,7 +67,7 @@ class BaseCard(Card):
     self._type = type
 
   def getValue(self) -> int:
-    return min(self._type.value,10)
+    return min(self._type.num_value, 10)
 
   def setScore(self, newVal) -> None:
     self._score = newVal
@@ -65,5 +78,25 @@ class BaseCard(Card):
   def applyEffect(self) -> None:
     return super().applyEffect()
 
+  @property
+  def type(self) -> CardType:
+    return self._type
+
+  @property
+  def name(self) -> str:
+    return f"{self._type.name.title()} of {self._suit.value}"
+
   def __str__(self) -> str:
-    return f"{self._type} of {self._suit}"
+    return self.name
+
+  def getCard(self, suit, type) -> 'BaseCard':
+    return BaseCard(suit, type)
+
+  def getSmallImage(self) -> str:
+    return f"21-Seconds-Game/assets/Cards/PNG/cards-small/card_{self._suit.name.lower()}_{self._type.value:02d}.png"
+
+  def getMediumImage(self) -> str:
+    return f"21-Seconds-Game/assets/Cards/PNG/cards-medium/card_{self._suit.name.lower()}_{self._type.value:02d}.png"
+
+  def getLargeImage(self) -> str:
+    return f"21-Seconds-Game/assets/Cards/PNG/cards-large/card_{self._suit.name.lower()}_{self._type.value:02d}.png"
