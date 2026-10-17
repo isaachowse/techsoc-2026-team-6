@@ -11,8 +11,10 @@ class Hand:
   def add(self, card: Card) -> None:
     self._cards.append(card)
 
-  def reset(self) -> None:
+  def empty(self) -> list[Card]:
+    copy = self._cards.copy()
     self._cards.clear()
+    return copy
 
   @property
   def value(self) -> int:
@@ -25,34 +27,73 @@ class Hand:
 
     return total
 
-  @property
-  def is_bust(self) -> bool:
-    return self.value > 21
-
   def __str__(self) -> str:
     return f"{list(map(str, self._cards))} ({self.value})"
+
+
+def _wildCard(card: Card, i: int) -> Card:
+  wildDeck = [5,2,15,4,30,8,300,16,600,24,1000]
+
+  if i > len(wildDeck) - 1:
+    return card
+  elif (i % 2 == 0):
+    return AddEffect(card, wildDeck[i])
+  return MultEffect(card, wildDeck[i])
 
 class Blackjack:
   dealer: Hand
   player: Hand
+  hits: int
+  stands: int
+
   _deck: list[Card]
+  _wildcard_count: int
 
   def __init__(self) -> None:
     self.dealer = Hand()
     self.player = Hand()
+    self.hits = 5
+    self.stands = 1
+    self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    self._wildcard_count = 0
     self.newHand()
 
   def newHand(self) -> None:
-    self._deck = [MultEffect(AddEffect(BaseCard(suit, type), random.randint(1, 3)), 2) for type in CardType for suit in Suit]
+    for hand in (self.player, self.dealer):
+      self._deck.extend(hand.empty())
+
+    # make one a wildcard
+    card = self._deck.pop(random.randint(0, len(self._deck) - 1))
+    wildcard = _wildCard(card, self._wildcard_count)
+    self._wildcard_count += 1
+    self._deck.append(wildcard)
+
+    # shuffle and deal
     random.shuffle(self._deck)
-    self._deal()
+
+    for hand in (self.player, self.dealer):
+      self.hit(hand)
+      self.hit(hand)
 
   def hit(self, hand: Hand) -> None:
+    if self.hits == 0:
+      return
+
     card = self._deck.pop()
     hand.add(card)
+    self.hits -= 1
 
-  def _deal(self) -> None:
-    for hand in (self.player, self.dealer):
-      hand.reset()
-      self.hit(hand)
-      self.hit(hand)
+    if self.hit == 0:
+      self.hits = 5
+      self.stands += 1
+
+  def stand(self) -> None:
+    if self.stands == 0:
+      return
+
+    self.stands -= 1
+    self.hits += 5
+
+  @property
+  def bust_value(self) -> int:
+    return 21 + (sum(wild.modifier for wild in self._deck if issubclass(wild.__class__, AddEffect)) * (1 + sum(wild.modifier for wild in self._deck if issubclass(wild.__class__, MultEffect)))) # type: ignore

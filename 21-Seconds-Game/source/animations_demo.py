@@ -14,7 +14,7 @@ GREEN = (20,100, 60)
 WHITE = (255, 255, 255)
 
 hit_button = pygame.Rect (180, 480, 160, 60)
-stand_button = pygame. Rect (60, 480, 160, 60)
+stand_button = pygame. Rect (460, 480, 160, 60)
 
 start_x = 650
 start_y = 100
@@ -52,7 +52,7 @@ while running:
   for event in pygame.event.get():
       if event.type == pygame.QUIT:
         running = False 
-      if event.type == pygame.K_f:
+      if event.type == pygame.MOUSEBUTTONDOWN:
           if event.button == 1:
             mouse_x, mouse_y = event.pos 
 
@@ -71,60 +71,60 @@ while running:
                   result = "lose"
 
                 result_size = 0 
-      if moving:
-        card_x, card_y, done = move_card(card_x, card_y, target_x. target_y)
-        if done:
-          moving = False
-          flipping = True 
+    if moving:
+      card_x, card_y, done = move_card(card_x, card_y, target_x, target_y)
+      if done:
+        moving = False
+        flipping = True 
 
-      if flipping:
-        progress += 1 
-        if progress >= 20:
-          progress = 20
-          flipping = False
-          score += 5
-          timer = 15
-          if score > 21:
-            result = "lose"
-            result_size = 0
+    if flipping:
+      progress += 1 
+      if progress >= 20:
+        progress = 20
+        flipping = False
+        score += 5
+        timer = 15
+        if score > 21:
+          result = "lose"
+          result_size = 0
           
-        if timer > 0:
-          timer -= 1
+      if timer > 0:
+        timer -= 1
 
-        if result is not None and result_size < 20:
-          result_size +=1
+      if result is not None and result_size < 20:
+        result_size +=1
 
 
-          screen.fill(GREEN)
+        screen.fill(GREEN)
 
-          card_image = flip_card(card_back, card_front, progress)
-          draw_x =  card_x + (80 - card.image.get_width()) / 2 
-          screen.blit(card_image, (draw_x, card_y))
+        card_image = flip_card(card_back, card_front, progress)
+        draw_x =  card_x + (80 - card_image.get_width()) / 2 
+        screen.blit(card_image, (draw_x, card_y))
 
-          mouse_x, mouse_y = pygame.mouse.get_pos()
+        mouse_x, mouse_y = pygame.mouse.get_pos()
 
-          hit_glow = 180 <= mouse_x <=340 and 480 <=540
-          stand_glow = 460 <= mouse_x <= 620 and 480 <= mouse_y <= 540 
+        hit_glow = 180 <= mouse_x <=340 and 480 <= mouse_y <= 540
+        stand_glow = 460 <= mouse_x <= 620 and 480 <= mouse_y <= 540 
 
-          button_animation(screen, hit_button, (0,180,0), hit_glow)
-          button_animation(screen, stand_button, (200,0,0), stand_glow)
+        button_animation(screen, hit_button, (0,180,0), hit_glow)
+        button_animation(screen, stand_button, (200,0,0), stand_glow)
 
-          hit_text = font.render("HIT", True, WHITE)
-          stand_text = font.render("STAND", True, WHITE)
+        hit_text = font.render("HIT", True, WHITE)
+        stand_text = font.render("STAND", True, WHITE)
 
-          screen.blit(hit_text, hit_text.get_rect(center=hit_button.center))
-          screen.blit(stand_text, stand_text.get_rect(center=stand_button.center))
+        screen.blit(hit_text, hit_text.get_rect(center=hit_button.center))
+        screen.blit(stand_text, stand_text.get_rect(center=stand_button.center))
 
-          score_text = score_animation (score, timer, font)
-          screen.blit(score_text, (350,50))
+        score_text = score_flash_animation (score, timer, font)
+        screen.blit(score_text, (350,50))
 
-          if result is not None:
-            text =  result_animation(result, big_font, result_size)
-            if text is not None:
-              text_rect =  text.get_rect(center=(400, 250))
-              screen.blit(text, text_text_rect)
+        if result is not None:
+          text =  result_animation(result, big_font, result_size)
+          if text is not None:
+            text_rect =  text.get_rect(center=(400, 250))
+            screen.blit(text, text_rect)
 
-          pygame.display.update()
+        pygame.display.update()
 
 def loadCardImage(self, card):
         suit = card.suit.name.lower() + "s"
