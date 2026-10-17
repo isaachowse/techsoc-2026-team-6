@@ -1,8 +1,14 @@
 import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
+from blackjack import Blackjack
 
-def start():
+class Display()
+
+    def __init__(self, Blackjack):
+        self.blackjack = Blackjack()
+
+    def start():
     pygame.init()
     (width, height) = (1000, 500)
     screen = pygame.display.set_mode((width, height))
@@ -49,7 +55,7 @@ def start():
     pygame.quit()
 
 def aKey():
-    pass
+    
         
 
 
