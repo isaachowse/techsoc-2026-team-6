@@ -1,6 +1,6 @@
 import pygame
 from card import BaseCard, Suit, CardType
-from effect import EffectDec, MultEffect, AddEffect
+from effect import MultEffect, AddEffect
 
 #to add effect, deck[card iterator] = wildCard(wildDeck,wildDeck iterator, deck[card iterator])
 
