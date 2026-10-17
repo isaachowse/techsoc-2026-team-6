@@ -5,8 +5,8 @@ from blackjack import Blackjack
 
 class Display():
 
-    def __init__(self, Blackjack):
-        self.blackjack = Blackjack()
+    def __init__(self, blackjack):
+        self.blackjack = blackjack
 
     def start(self):
         pygame.init()

@@ -1,11 +1,10 @@
-import pygame
+import pygame, random
 from blackjack import Blackjack
 from card import BaseCard, Suit, CardType
-from effect import EffectDec, MultEffect, AddEffect
+from effect import MultEffect, AddEffect
 from display import Display
 
 if __name__ == "__main__":
-    pygame.init()
     game = Blackjack()
     print(game.dealer, game.player)
     display = Display(game)
