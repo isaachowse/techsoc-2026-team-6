@@ -1,5 +1,5 @@
 from abc import ABC
-from card import Card, CardType
+from card import Card, CardType, Suit
 
 class EffectDec(Card):
   _card: Card
