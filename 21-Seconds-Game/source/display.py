@@ -8,10 +8,11 @@ class Display():
 
     def __init__(self, blackjack):
         self.blackjack = blackjack
+        self.player = self.blackjack.player
+        self.dealer = self.blackjack.dealer
 
     def display_card(self, card):
-        print(card.name)
-        print("hello")
+        return card
 
     def start(self):
         pygame.init()
@@ -28,8 +29,8 @@ class Display():
 
         playButton = Button(150, 250, playImage, 6)
         exitButton = Button(550, 250, exitImage, 6)
-        hitButton = Button(150, 250, hitImage, 6)
-        standButton = Button(550, 250, standImage, 6)
+        hitButton = Button(150, 388, hitImage, 6)
+        standButton = Button(550, 388, standImage, 6)
         buttons = [playButton, exitButton, hitButton, standButton]
 
         pygame.display.flip()
@@ -42,7 +43,7 @@ class Display():
                         if homeScreen:
                             homeScreen = False
                         else:
-                            aKey()
+                            self.aKey()
                     elif event.key == K_l:
                         running = False
                 if event.type == QUIT:
@@ -54,7 +55,13 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
-                self.display_card(card.BaseCard(suit=card.Suit.HEART, type=card.CardType.ONE))
+                offset = 0
+                for card in self.blackjack.player._cards:
+                    newCard = self.display_card(card)
+                    cardImage = self.loadCardImage(newCard)
+                    screen.blit(cardImage, (100 + offset, 100))
+                    offset += 100
+                pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
                 hitButton.draw(screen)
                 standButton.draw(screen)
 
@@ -62,4 +69,16 @@ class Display():
         pygame.quit()
 
     def aKey(self):
-        pass
+        self.blackjack.hit(self.player)
+
+    def loadCardImage(self, card):
+        suit = card.suit.name.lower() + "s"
+        try:
+            int(card.type.value)
+            type = f"{int(card.type.value):02d}"
+        except ValueError:
+            type = card.type.value[0].upper()
+        imagePath = f"21-Seconds-Game/assets/Cards/PNG/cards-large/card_{suit}_{type}.png"
+        cardImage = pygame.image.load(imagePath).convert_alpha()
+        cardImage = pygame.transform.scale(cardImage, (int(cardImage.get_width())*2, int(cardImage.get_height())*2))
+        return cardImage
