@@ -1,6 +1,6 @@
 import pygame
 import random
-from card import BaseCard, Suit, CardType
+from card import BaseCard, Card, Suit, CardType
 
 def start():
     (width, height) = (300, 200)
@@ -18,7 +18,7 @@ def start():
             if event.type == pygame.QUIT:
                 running = False
 
-def createDeck() -> list[BaseCard]:
+def createDeck() -> list[Card]:
   deck = []
 
   for suit in Suit:
@@ -27,10 +27,10 @@ def createDeck() -> list[BaseCard]:
 
   return deck
 
-def shuffle(deck:list[BaseCard]) -> list[BaseCard]:
-    for i in range(len(deck)-1,0,-1):
+def shuffle(deck:list[Card]) -> list[Card]:
+    for i in range(len(deck) - 1, 0, -1):
         j = random.randint(0,i)
-        deck[i],deck[j]=deck[j],deck[i]
+        deck[i], deck[j] = deck[j], deck[i]
     return deck
 
 if __name__ == "__main__":

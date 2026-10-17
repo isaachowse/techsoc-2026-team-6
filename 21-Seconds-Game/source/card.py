@@ -42,5 +42,13 @@ class BaseCard(Card):
   def applyEffect(self) -> None:
     return super().applyEffect()
 
+  @property
+  def name(self) -> str:
+    return self._type.name.title()
+
+  @property
+  def suit_name(self) -> str:
+    return self._suit.name.title()
+
   def __str__(self) -> str:
-    return f"{self._type} of {self._suit}"
+    return f"{self.name} of {self.suit_name}s"
