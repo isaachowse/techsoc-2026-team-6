@@ -1,5 +1,5 @@
 from card import BaseCard, Card, CardType, Suit
-from effect import MultEffect
+from effect import MultEffect, AddEffect
 import random
 
 class Hand:
@@ -35,7 +35,6 @@ class Hand:
 class Blackjack:
   dealer: Hand
   player: Hand
-
   _deck: list[Card]
 
   def __init__(self) -> None:
@@ -44,7 +43,7 @@ class Blackjack:
     self.newHand()
 
   def newHand(self) -> None:
-    self._deck = [MultEffect(BaseCard(suit, type), 2) for type in CardType for suit in Suit]
+    self._deck = [MultEffect(AddEffect(BaseCard(suit, type), random.randint(1, 3)), 2) for type in CardType for suit in Suit]
     random.shuffle(self._deck)
     self._deal()
 

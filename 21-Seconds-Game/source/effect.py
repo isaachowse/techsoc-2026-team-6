@@ -17,7 +17,7 @@ class EffectDec(Card):
     return self._card.type
 
   def __str__(self) -> str:
-    return f"{self._card} [{self.__class__.__name__}({self._modifier})]"
+    return f"{self._card} [{self.__class__.__name__}({self._modifier}) = {self.score}]"
 
 class MultEffect(EffectDec):
   def __init__(self, card: Card, multiplier: int):
@@ -26,7 +26,7 @@ class MultEffect(EffectDec):
 
   @property
   def score(self) -> int:
-    return self.type.num_value * self._modifier
+    return self._card.score * self._modifier
 
 class AddEffect(EffectDec):
   def __init__(self, card: Card, toAdd: int):
@@ -35,4 +35,4 @@ class AddEffect(EffectDec):
 
   @property
   def score(self):
-    return self._card.score * self._modifier
+    return self._card.score + self._modifier
