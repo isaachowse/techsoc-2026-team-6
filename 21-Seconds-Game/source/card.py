@@ -47,6 +47,10 @@ class BaseCard(Card):
     return self._type.name.title()
 
   @property
+  def value(self) -> int:
+    return self._type.value
+
+  @property
   def suit_name(self) -> str:
     return self._suit.name.title()
 
