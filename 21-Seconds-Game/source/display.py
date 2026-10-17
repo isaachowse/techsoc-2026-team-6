@@ -2,11 +2,16 @@ import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack
+import card
 
 class Display():
 
     def __init__(self, blackjack):
         self.blackjack = blackjack
+
+    def display_card(self, card):
+        print(card.name)
+        print("hello")
 
     def start(self):
         pygame.init()
@@ -49,8 +54,10 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
+                self.display_card(card.BaseCard(suit=card.Suit.HEART, type=card.CardType.ONE))
                 hitButton.draw(screen)
                 standButton.draw(screen)
+
             pygame.display.update()
         pygame.quit()
 
