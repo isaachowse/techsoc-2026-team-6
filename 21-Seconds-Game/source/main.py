@@ -1,4 +1,5 @@
 import pygame
+import random
 from card import BaseCard, Suit, CardType
 
 def start():
@@ -7,7 +8,9 @@ def start():
     pygame.display.flip()
 
     deck = createDeck()
-    print(list(str(card) for card in deck))
+    print(list(str(card) for card in deck[0:10]))
+    shuffle(deck)
+    print(list(str(card) for card in deck[0:10]))
 
     running = True
     while running:
@@ -23,6 +26,12 @@ def createDeck() -> list[BaseCard]:
       deck.append(BaseCard(suit, type))
 
   return deck
+
+def shuffle(deck:list[BaseCard]) -> list[BaseCard]:
+    for i in range(len(deck)-1,0,-1):
+        j = random.randint(0,i)
+        deck[i],deck[j]=deck[j],deck[i]
+    return deck
 
 if __name__ == "__main__":
     pygame.init()
