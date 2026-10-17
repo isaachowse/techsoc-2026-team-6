@@ -3,6 +3,7 @@ from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack
 import card
+import random  
 
 class Display():
 
@@ -16,6 +17,7 @@ class Display():
 
     def start(self):
         pygame.init()
+        
         (width, height) = (1000, 500)
         screen = pygame.display.set_mode((width, height))
         backgroundColour = [53, 101, 77]
@@ -31,7 +33,9 @@ class Display():
         exitButton = Button(550, 250, exitImage, 6)
         hitButton = Button(150, 388, hitImage, 6)
         standButton = Button(550, 388, standImage, 6)
-        buttons = [playButton, exitButton, hitButton, standButton]
+
+        dealerImage = pygame.image.load("21-Seconds-Game/assets/Dealer.png").convert_alpha()
+        dealerImage = pygame.transform.scale(dealerImage, (int(dealerImage.get_width())*0.3, int(dealerImage.get_height())*0.3))
 
         pygame.display.flip()
 
@@ -41,6 +45,8 @@ class Display():
                 if event.type == KEYDOWN:
                     if event.key == K_a:
                         if homeScreen and not playButton.disabled:
+                            pygame.mixer.music.load("21-Seconds-Game/sounds/sfx/press_1.wav")
+                            pygame.mixer.music.play()
                             homeScreen = False
                         elif not hitButton.disabled:
                             aKey()
@@ -58,21 +64,44 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
-                offset = 0
-                for card in self.blackjack.player._cards:
-                    newCard = self.display_card(card)
-                    cardImage = self.loadCardImage(newCard)
-                    screen.blit(cardImage, (100 + offset, 100))
-                    offset += 100
+                bigOffset = 0
+                smallOffset = 0
+                if len(self.blackjack.player._cards) < 5:
+                    for card in self.blackjack.player._cards:
+                        newCard = self.display_card(card)
+                        cardImage = self.loadCardImage(newCard)
+                        screen.blit(cardImage, (0 + bigOffset, 265))
+                        bigOffset += 100
+                else:
+                    for card in self.blackjack.player._cards[: len(self.blackjack.player._cards) - 3]:
+                        newCard = self.display_card(card)
+                        cardImage = self.loadCardImage(newCard)
+                        screen.blit(cardImage, (0 + smallOffset, 265))
+                        smallOffset += 25
+                        bigOffset += 25
+                    for card in self.blackjack.player._cards[len(self.blackjack.player._cards) - 3:]:
+                        newCard = self.display_card(card)
+                        cardImage = self.loadCardImage(newCard)
+                        screen.blit(cardImage, (0 + bigOffset, 265))
+                        bigOffset += 100
+
                 pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
                 hitButton.draw(screen)
                 standButton.draw(screen)
-
+                screen.blit(dealerImage, (400, 0))
             pygame.display.update()
         pygame.quit()
 
     def aKey(self):
         self.blackjack.hit(self.player)
+        deal_sound = random.randint(1, 3)
+        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
+        pygame.mixer.music.play()
+
+    def lKey(self):
+        #self.blackjack.stand(self.player)
+        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
+        pygame.mixer.music.play()
 
     def loadCardImage(self, card):
         suit = card.suit.name.lower() + "s"
