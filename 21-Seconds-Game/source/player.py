@@ -8,8 +8,11 @@ class PlayerBase(ABC):
   def __init__(self) -> None:
     self._hand = []
 
-  def addCard(self, card: Card):
+  def addCard(self, card: Card) -> None:
     self._hand.append(card)
+
+  def reset(self) -> None:
+    self._hand.clear()
 
   def __str__(self) -> str:
     return str(list(map(str, self._hand)))
@@ -22,7 +25,12 @@ class Dealer(PlayerBase):
 
   def __init__(self):
     super().__init__()
+    self.reset()
+
+  def reset(self) -> None:
+    super().reset()
     self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    self.shuffle()
 
   def hit(self, player: PlayerBase):
     player.addCard(self._deck.pop())

@@ -12,9 +12,15 @@ def start():
     dealer.deal(dealer)
     dealer.deal(player)
 
-    print(player)
+    print(player, len(dealer._deck))
     dealer.hit(player)
-    print(player)
+    print(player, len(dealer._deck))
+
+    # new round
+    dealer.reset()
+    player.reset()
+
+    print(player, dealer, len(dealer._deck))
 
     running = True
     while running:
