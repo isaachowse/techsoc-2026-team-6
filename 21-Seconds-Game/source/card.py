@@ -9,7 +9,7 @@ class Suit(Enum):
   SPADE = 3
 
 class CardType(Enum):
-  ONE = 1
+  ACE = 1
   TWO = 2
   THREE = 3
   FOUR = 4
@@ -28,16 +28,39 @@ class Card(ABC):
   def applyEffect(self) -> None:
     pass
 
+  @abstractmethod
+  def getValue(self) -> int:
+    pass
+
+  @abstractmethod
+  def setScore(self, newVal) -> None:
+    pass
+
+  @abstractmethod
+  def getScore(self, newVal) -> int:
+    pass
+
 class BaseCard(Card):
   _suit: Suit
   _type: CardType
+  _score: int
 
   def __init__(self, suit: Suit, type: CardType) -> None:
     self._suit = suit
     self._type = type
+    self._score = self.setScore(self.getValue())
 
   def changeCard(self, type: CardType):
     self._type = type
+
+  def getValue(self) -> int:
+    return min(self._type.value,10)
+
+  def setScore(self, newVal) -> None:
+    self._score = newVal
+
+  def getScore(self):
+    return self._score
 
   def applyEffect(self) -> None:
     return super().applyEffect()
