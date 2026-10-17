@@ -1,4 +1,4 @@
-import pygame
+import pygame, random
 from card import BaseCard, Suit, CardType
 from effect import MultEffect, AddEffect
 
@@ -34,6 +34,12 @@ def wildCard(wildDeck:list[int], wildCard:int, nextCard:BaseCard) -> None:
 
 def createWildDeck() -> list[int]:
    return [5,2,15,4]
+
+def shuffle(deck:list[BaseCard]) -> list[BaseCard]:
+    for i in range(len(deck)-1,0,-1):
+        j = random.randint(0,i)
+        deck[i],deck[j]=deck[j],deck[i]
+    return deck
 
 if __name__ == "__main__":
     pygame.init()
