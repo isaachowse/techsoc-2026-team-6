@@ -123,7 +123,6 @@ class Blackjack:
       hand.add(card)
     if self.hits == 0:
       self.stands += 1
-    print(card.score,card.type)
 
   def _deal(self) -> None:
     for hand in (self.player, self.dealer):
