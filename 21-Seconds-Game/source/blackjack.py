@@ -47,6 +47,7 @@ class Blackjack:
   _deck: list[Card]
   _wildDeck: list[int]
   _wildcard_count: int
+  _cur_WildCard: int
 
   def __init__(self) -> None:
     self.dealer = Hand()
@@ -78,13 +79,15 @@ class Blackjack:
   def getWild(self) -> bool:
     return self._wild
 
+  def setCurrentWildCard():
+
   def hit(self, hand: Hand) -> None:
     if self.getWild == False:
       card = self._deck.pop()
       hand.add(card)
     else:
       card = self._deck.pop()
-      card = self.wildCard()
+      card = self.wildCard(self.getWildDeck,self.getWild,card)
 
   def _deal(self) -> None:
     for hand in (self.player, self.dealer):
@@ -92,24 +95,26 @@ class Blackjack:
       self.hit(hand)
       self.hit(hand)
 
-  def wildCard(wildDeck:list[int], wildCard:int, nextCard:BaseCard) -> None:
+  def wildCard(self, wildDeck:list[int], wildCard:int, nextCard:BaseCard) -> None:
     if (wildCard % 2 == 0):
        return AddEffect(nextCard,wildDeck[wildCard])
     return MultEffect(nextCard,wildDeck[wildCard])
 
-  def createWildDeck() -> list[int]:
+  def createWildDeck(self) -> list[int]:
     return [5,2,15,4,30,8,300,16,600,24,1000]
 
-  def shuffle(deck:list[BaseCard]) -> list[BaseCard]:
+  def shuffle(self, deck:list[BaseCard]) -> list[BaseCard]:
     for i in range(len(deck)-1,0,-1):
         j = random.randint(0,i)
         deck[i],deck[j]=deck[j],deck[i]
     return deck
 
-  def isNextWild():
+  def isNextWild(self):
     if random.randint(0,4) == 1:
+      self.setCurrentWildCard(random.randint(0,11))
       return True
     return False
+  
   @property
   def bust_value(self) -> int:
     return 21 + (sum(wild.modifier for wild in self._deck if issubclass(wild.__class__, AddEffect)) * (1 + sum(wild.modifier for wild in self._deck if issubclass(wild.__class__, MultEffect)))) # type: ignore
