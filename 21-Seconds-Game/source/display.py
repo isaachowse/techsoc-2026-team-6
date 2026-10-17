@@ -6,8 +6,8 @@ import card
 
 class Display():
 
-    def __init__(self, Blackjack):
-        self.blackjack = Blackjack()
+    def __init__(self, blackjack):
+        self.blackjack = blackjack
 
     def display_card(self, card: card.BaseCard):
         print(card.name)
