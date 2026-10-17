@@ -1,5 +1,5 @@
 from abc import ABC
-from card import Card
+from card import Card, CardType
 
 class EffectDec(Card):
   _card: Card
@@ -8,49 +8,31 @@ class EffectDec(Card):
   def __init__(self, card: Card) -> None:
     self._card = card
 
-  def applyEffect(self) -> None:
-    return self._card.applyEffect()
+  @property
+  def score(self):
+    return self._card.score
 
-  def getEffectVal(self) -> int:
-      return self._effectVal
+  @property
+  def type(self) -> CardType:
+    return self._card.type
 
-  def setEffectVal(self, newVal) -> None:
-      self._effectVal = newVal
-
-  def getValue(self) -> int:
-    return self._card.getValue()
-
-  def setScore(self, newVal) -> None:
-    self._card.setScore(newVal)
-
-  def getScore(self) -> None:
-    return self._card.getScore()
-
-class BaseValueEffect(EffectDec):
-  def __init__(self, card):
-    super().__init__(card)
-
-  def applyEffect(self):
-    super().applyEffect()
-    self.setScore(self.getValue())
+  def __str__(self) -> str:
+    return f"{self._card} ({self.__class__.__name__})"
 
 class MultEffect(EffectDec):
-
-  def __init__(self, card, newVal:int):
+  def __init__(self, card: Card, effectVal: int):
     super().__init__(card)
-    self.setEffectVal(newVal)
+    self._effectVal = effectVal
 
-  def applyEffect(self) -> None:
-    super().applyEffect()
-    self.setScore(self.getValue() * self.getEffectVal())
-    
+  @property
+  def score(self) -> int:
+    return self.type.num_value * self._effectVal
 
 class AddEffect(EffectDec):
-
-  def __init__(self, card, newVal:int):
+  def __init__(self, card: Card, effectVal: int):
       super().__init__(card)
-      self.setEffectVal(newVal)
+      self._effectVal = effectVal
 
-  def applyEffect(self) -> None:
-    super().applyEffect()
-    self.setScore(self.getValue() + self.getEffectVal())
+  @property
+  def score(self):
+    return self._card.score * self._effectVal

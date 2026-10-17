@@ -1,7 +1,5 @@
 from abc import ABC, abstractmethod
 from enum import StrEnum
-from typing import override
-
 
 class Suit(StrEnum):
   DIAMOND = 'Diamonds'
@@ -34,49 +32,26 @@ class CardType(StrEnum):
 
 
 class Card(ABC):
-  @abstractmethod
-  def applyEffect(self) -> None: pass
-
   @property
   @abstractmethod
   def type(self) -> CardType: pass
 
+  @property
   @abstractmethod
-  def getValue(self) -> int:
-    pass
-
-  @abstractmethod
-  def setScore(self, newVal) -> None:
-    pass
-
-  @abstractmethod
-  def getScore(self, newVal) -> int:
+  def score(self) -> int:
     pass
 
 class BaseCard(Card):
   _suit: Suit
   _type: CardType
-  _score: int
 
   def __init__(self, suit: Suit, type: CardType) -> None:
     self._suit = suit
     self._type = type
-    self._score = self.setScore(self.getValue())
 
-  def changeCard(self, type: CardType):
-    self._type = type
-
-  def getValue(self) -> int:
-    return min(self._type.num_value, 10)
-
-  def setScore(self, newVal) -> None:
-    self._score = newVal
-
-  def getScore(self):
-    return self._score
-
-  def applyEffect(self) -> None:
-    return super().applyEffect()
+  @property
+  def score(self) -> int:
+    return self._type.num_value
 
   @property
   def type(self) -> CardType:
@@ -88,9 +63,6 @@ class BaseCard(Card):
 
   def __str__(self) -> str:
     return self.name
-
-  def getCard(self, suit, type) -> 'BaseCard':
-    return BaseCard(suit, type)
 
   def getSmallImage(self) -> str:
     return f"21-Seconds-Game/assets/Cards/PNG/cards-small/card_{self._suit.name.lower()}_{self._type.value:02d}.png"
