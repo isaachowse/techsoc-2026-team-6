@@ -40,6 +40,8 @@ class Blackjack:
   _wildDeck: list[int]
   _wildcard_count: int
   _cur_WildCard: int
+  _roundCount: int
+  _roundScore: int
 
   def __init__(self) -> None:
     self.dealer = Hand()
@@ -69,6 +71,18 @@ class Blackjack:
 
   def getWildDeck(self) -> list[int]:
     return self._wildDeck
+
+  def getRoundScore(self) -> int:
+    return self._roundScore
+
+  def setRoundScore(self, newVal) -> None:
+    self._roundScore = newVal
+
+  def getRoundCount(self) -> int:
+    return self._roundCount
+
+  def setRoundCount(self, newVal) -> None:
+    self._roundCount = newVal
   
   def hit(self, hand: Hand) -> None:
     if self.hits == 0:
@@ -149,6 +163,9 @@ class Blackjack:
       self.setCurrentWildCard(random.randint(0,11))
       return True
     return False
+
+  def winCheck(self):
+    if self.getRoundScore()
   
   @property
   def bust_value(self) -> int:
