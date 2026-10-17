@@ -33,8 +33,8 @@ class BaseCard(Card):
   _type: CardType
 
   def __init__(self, suit: Suit, type: CardType) -> None:
-    self.suit = suit
-    self.type = type
+    self._suit = suit
+    self._type = type
 
   def changeCard(self, type: CardType):
     self._type = type
