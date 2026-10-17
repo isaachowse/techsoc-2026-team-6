@@ -50,7 +50,7 @@ class Display():
                             pygame.mixer.music.play()
                             homeScreen = False
                         elif not hitButton.disabled:
-                            aKey()
+                            self.aKey()
                     elif event.key == K_l:
                         if homeScreen and not exitButton.disabled:
                           running = False
