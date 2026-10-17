@@ -74,6 +74,8 @@ class Blackjack:
     for hand in (self.player, self.dealer):
       self.hit(hand)
       self.hit(hand)
+    self.hits = 5
+    self.stands = 1
 
   def hit(self, hand: Hand) -> None:
     if self.hits == 0:
