@@ -21,11 +21,6 @@ class Hand:
   def __str__(self) -> str:
     return str(list(map(str, self._cards)))
 
-def new_deck() -> list[Card]:
-  deck: list[Card] = [BaseCard(suit, type) for type in CardType for suit in Suit]
-  random.shuffle(deck)
-  return deck
-
 class Blackjack:
   dealer: Hand
   player: Hand
@@ -38,7 +33,9 @@ class Blackjack:
     self.newHand()
 
   def newHand(self) -> None:
-    self._deck = new_deck()
+    self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    random.shuffle(self._deck)
+
     self.deal(self.dealer)
     self.deal(self.player)
 
