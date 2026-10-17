@@ -7,6 +7,8 @@ class Display():
 
     def __init__(self, blackjack):
         self.blackjack = blackjack
+        self.player = self.blackjack.player
+        self.dealer = self.blackjack.dealer
 
     def start(self):
         pygame.init()
@@ -37,7 +39,7 @@ class Display():
                         if homeScreen:
                             homeScreen = False
                         else:
-                            aKey()
+                            self.aKey()
                     elif event.key == K_l:
                         running = False
                 if event.type == QUIT:
@@ -55,4 +57,5 @@ class Display():
         pygame.quit()
 
     def aKey(self):
-        pass
+        self.blackjack.hit(self.player)
+        
