@@ -24,3 +24,6 @@ class Button():
         surface.blit(self.image, (self.rect.x, self.rect.y))
 
         return action
+
+    def remove(self, surface):
+        surface.blit(pygame.Surface((self.rect.width, self.rect.height)), (self.rect.x, self.rect.y))
