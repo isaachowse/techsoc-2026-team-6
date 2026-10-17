@@ -79,7 +79,8 @@ class Blackjack:
   def getWild(self) -> bool:
     return self._wild
 
-  def setCurrentWildCard():
+  def setCurrentWildCard(self, newVal:int) -> None:
+    self._cur_WildCard = newVal
 
   def hit(self, hand: Hand) -> None:
     if self.getWild == False:
@@ -109,7 +110,7 @@ class Blackjack:
         deck[i],deck[j]=deck[j],deck[i]
     return deck
 
-  def isNextWild(self):
+  def isNextWild(self) -> bool:
     if random.randint(0,4) == 1:
       self.setCurrentWildCard(random.randint(0,11))
       return True
