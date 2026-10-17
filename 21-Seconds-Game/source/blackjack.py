@@ -35,6 +35,7 @@ class Hand:
 class Blackjack:
   dealer: Hand
   player: Hand
+  _wild: bool
   _deck: list[Card]
 
   def __init__(self) -> None:
@@ -43,8 +44,8 @@ class Blackjack:
     self.newHand()
 
   def newHand(self) -> None:
-    self._deck = [MultEffect(AddEffect(BaseCard(suit, type), random.randint(1, 3)), 2) for type in CardType for suit in Suit]
-    random.shuffle(self._deck)
+    self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    self.shuffle(self._deck)
     self._deal()
 
   def hit(self, hand: Hand) -> None:
@@ -70,3 +71,8 @@ class Blackjack:
         j = random.randint(0,i)
         deck[i],deck[j]=deck[j],deck[i]
     return deck
+
+  def isNextWild():
+    if None:
+      return True
+    return False
