@@ -5,10 +5,11 @@ from effect import EffectDec, MultEffect, AddEffect
 #to add effect, deck[card iterator] = wildCard(wildDeck,wildDeck iterator, deck[card iterator])
 
 def start():
-    (width, height) = (300, 200)
+    pygame.init()
+    (width, height) = (1000, 500)
     screen = pygame.display.set_mode((width, height))
     pygame.display.flip()
-    
+    deck = createDeck()
     print(list(str(card) for card in deck))
 
     running = True
