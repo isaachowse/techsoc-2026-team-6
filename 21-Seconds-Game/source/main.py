@@ -1,21 +1,13 @@
 import pygame
 from card import BaseCard, Suit, CardType
-from effect import EffectDec, BaseValueEffect, MultEffect, AddEffect
+from effect import EffectDec, MultEffect, AddEffect
+
+#to add effect, deck[card iterator] = wildCard(wildDeck,wildDeck iterator, deck[card iterator])
 
 def start():
     (width, height) = (300, 200)
     screen = pygame.display.set_mode((width, height))
     pygame.display.flip()
-
-    deck = createDeck()
-    wildDeck = createWildDeck()
-    print(deck[0].getScore())
-    wildCard(wildDeck,0,deck[0])
-    print(deck[0].getScore())
-
-    print(deck[1].getScore())
-    wildCard(wildDeck,1,deck[1])
-    print(deck[1].getScore())
     
     print(list(str(card) for card in deck))
 
@@ -36,9 +28,8 @@ def createDeck() -> list[BaseCard]:
 
 def wildCard(wildDeck:list[int], wildCard:int, nextCard:BaseCard) -> None:
     if (wildCard % 2 == 0):
-       nextCard = AddEffect(nextCard,wildDeck[wildCard]).applyEffect()
-    else:
-       nextCard = MultEffect(nextCard,wildDeck[wildCard]).applyEffect()
+       return AddEffect(nextCard,wildDeck[wildCard])
+    return MultEffect(nextCard,wildDeck[wildCard])
 
 def createWildDeck() -> list[int]:
    return [5,2,15,4]

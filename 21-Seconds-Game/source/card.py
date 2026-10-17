@@ -63,7 +63,7 @@ class BaseCard(Card):
     return self._score
 
   def applyEffect(self) -> None:
-    return super().applyEffect()
+    self.setScore(self.getValue())
 
   def __str__(self) -> str:
     return f"{self._type} of {self._suit}"

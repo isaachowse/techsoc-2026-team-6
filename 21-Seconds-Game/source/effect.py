@@ -26,14 +26,6 @@ class EffectDec(Card):
   def getScore(self) -> None:
     return self._card.getScore()
 
-class BaseValueEffect(EffectDec):
-  def __init__(self, card):
-    super().__init__(card)
-
-  def applyEffect(self):
-    super().applyEffect()
-    self.setScore(self.getValue())
-
 class MultEffect(EffectDec):
 
   def __init__(self, card, newVal:int):
@@ -42,7 +34,7 @@ class MultEffect(EffectDec):
 
   def applyEffect(self) -> None:
     super().applyEffect()
-    self.setScore(self.getValue() * self.getEffectVal())
+    self.setScore(self.getScore() * self.getEffectVal())
     
 
 class AddEffect(EffectDec):
@@ -53,4 +45,4 @@ class AddEffect(EffectDec):
 
   def applyEffect(self) -> None:
     super().applyEffect()
-    self.setScore(self.getValue() + self.getEffectVal())
+    self.setScore(self.getScore() + self.getEffectVal())
