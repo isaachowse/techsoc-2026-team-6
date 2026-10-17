@@ -13,6 +13,11 @@ class Hand:
   def reset(self) -> None:
     self._cards.clear()
 
+  @property
+  def is_bust(self) -> bool:
+    total = sum(card.value for card in self._cards)
+    return total > 21
+
   def __str__(self) -> str:
     return str(list(map(str, self._cards)))
 
