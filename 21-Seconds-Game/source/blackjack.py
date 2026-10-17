@@ -30,16 +30,6 @@ class Hand:
   def __str__(self) -> str:
     return f"{list(map(str, self._cards))} ({self.value})"
 
-
-def _wildCard(card: Card, i: int) -> Card:
-  wildDeck = [5,2,15,4,30,8,300,16,600,24,1000]
-
-  if i > len(wildDeck) - 1:
-    return card
-  elif (i % 2 == 0):
-    return AddEffect(card, wildDeck[i])
-  return MultEffect(card, wildDeck[i])
-
 class Blackjack:
   dealer: Hand
   player: Hand
@@ -58,7 +48,10 @@ class Blackjack:
     self.stands = 1
     self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
     self._wildcard_count = 0
+    self._cur_WildCard = 0
+    self._wildDeck = self.createWildDeck()
     self.newHand()
+    
 
   def newHand(self) -> None:
     for hand in (self.player, self.dealer):
@@ -85,22 +78,24 @@ class Blackjack:
     hand.add(card)
     self.hits -= 1
 
+    self.setWild(self.isNextWild())
+
     if self.hit == 0:
       self.hits = 5
       self.stands += 1
 
   def stand(self) -> None:
     if self.stands == 0:
-      return
-
-    self.stands -= 1
-    self.hits += 5
+          self.hits += 5
 
   def getWild(self) -> bool:
     return self._wild
 
   def setWild(self, newBool) -> None:
     self._wild = newBool
+
+  def getCurrentWildCard(self) -> int:
+      return self._cur_WildCard
 
   def setCurrentWildCard(self, newVal:int) -> None:
     self._cur_WildCard = newVal
@@ -110,9 +105,14 @@ class Blackjack:
     if self.getWild == False:
       card = self._deck.pop()
       hand.add(card)
+      print("hitF")
     else:
       card = self._deck.pop()
-      card = self.wildCard(self.getWildDeck,self.getWild,card)
+      card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
+      hand.add(card)
+      print("hitT")
+    if self.hits == 0:
+      self.stands += 1
 
   def _deal(self) -> None:
     for hand in (self.player, self.dealer):
