@@ -2,6 +2,7 @@ import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack
+from animations import move_card, flip_card, button_animation, score_flash_animation, result_animation 
 import card
 import random  
 
