@@ -1,54 +1,58 @@
 import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
+from blackjack import Blackjack
 
-def start():
-    pygame.init()
-    (width, height) = (1000, 500)
-    screen = pygame.display.set_mode((width, height))
-    backgroundColour = [53, 101, 77]
+class Display():
 
-    homeScreen = True
+    def __init__(self, Blackjack):
+        self.blackjack = Blackjack()
 
-    playImage = pygame.image.load("21-Seconds-Game/assets/Buttons/play-button.png").convert_alpha()
-    exitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/exit-button.png").convert_alpha()
-    hitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/hit-button.png").convert_alpha()
-    standImage = pygame.image.load("21-Seconds-Game/assets/Buttons/stand-button.png").convert_alpha()
+    def start(self):
+        pygame.init()
+        (width, height) = (1000, 500)
+        screen = pygame.display.set_mode((width, height))
+        backgroundColour = [53, 101, 77]
 
-    playButton = Button(150, 250, playImage, 6)
-    exitButton = Button(550, 250, exitImage, 6)
-    hitButton = Button(150, 350, hitImage, 6)
-    standButton = Button(550, 350, standImage, 6)
-    buttons = [playButton, exitButton, hitButton, standButton]
+        homeScreen = True
 
-    pygame.display.flip()
+        playImage = pygame.image.load("21-Seconds-Game/assets/Buttons/play-button.png").convert_alpha()
+        exitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/exit-button.png").convert_alpha()
+        hitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/hit-button.png").convert_alpha()
+        standImage = pygame.image.load("21-Seconds-Game/assets/Buttons/stand-button.png").convert_alpha()
 
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_a:
-                    homeScreen = not homeScreen
-                elif event.key == K_l:
+        playButton = Button(150, 250, playImage, 6)
+        exitButton = Button(550, 250, exitImage, 6)
+        hitButton = Button(150, 250, hitImage, 6)
+        standButton = Button(550, 250, standImage, 6)
+        buttons = [playButton, exitButton, hitButton, standButton]
+
+        pygame.display.flip()
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_a:
+                        if homeScreen:
+                            homeScreen = False
+                        else:
+                            aKey()
+                    elif event.key == K_l:
+                        running = False
+                if event.type == QUIT:
                     running = False
-            if event.type == QUIT:
-                running = False
 
-        screen.fill(backgroundColour)
+            screen.fill(backgroundColour)
 
-        if homeScreen:
-            playButton.draw(screen)
-            exitButton.draw(screen)
-        else:
-            loadGameScreen(screen, buttons)
-        pygame.display.update()
-    pygame.quit()
+            if homeScreen:
+                playButton.draw(screen)
+                exitButton.draw(screen)
+            else:
+                hitButton.draw(screen)
+                standButton.draw(screen)
+            pygame.display.update()
+        pygame.quit()
 
-def loadGameScreen(screen, buttons):
-    buttons[2].draw(screen)
-    buttons[3].draw(screen)
-    pygame.display.update()
-
-
-
-start()
+    def aKey(self):
+        pass
