@@ -65,13 +65,10 @@ class Blackjack:
       self._deck.extend(hand.empty())
 
     # make one a wildcard
-    card = self._deck.pop(random.randint(0, len(self._deck) - 1))
-    wildcard = _wildCard(card, self._wildcard_count)
-    self._wildcard_count += 1
-    self._deck.append(wildcard)
+    self.setWild(self.isNextWild())
 
     # shuffle and deal
-    random.shuffle(self._deck)
+    self.shuffle(self._deck)
 
     for hand in (self.player, self.dealer):
       self.hit(hand)
@@ -102,10 +99,14 @@ class Blackjack:
   def getWild(self) -> bool:
     return self._wild
 
+  def setWild(self, newBool) -> None:
+    self._wild = newBool
+
   def setCurrentWildCard(self, newVal:int) -> None:
     self._cur_WildCard = newVal
 
   def hit(self, hand: Hand) -> None:
+    self.setWild(self.isNextWild())
     if self.getWild == False:
       card = self._deck.pop()
       hand.add(card)
