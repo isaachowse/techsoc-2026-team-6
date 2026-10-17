@@ -38,3 +38,9 @@ class BaseCard(Card):
 
   def changeCard(self, type: CardType):
     self._type = type
+
+  def applyEffect(self) -> None:
+    return super().applyEffect()
+
+  def __str__(self) -> str:
+    return f"{self._type} of {self._suit}"

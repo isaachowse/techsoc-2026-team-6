@@ -1,10 +1,13 @@
 import pygame
-from cards import Card
+from card import BaseCard, Suit, CardType
 
 def start():
     (width, height) = (300, 200)
     screen = pygame.display.set_mode((width, height))
     pygame.display.flip()
+
+    deck = createDeck()
+    print(list(str(card) for card in deck))
 
     running = True
     while running:
@@ -12,15 +15,15 @@ def start():
             if event.type == pygame.QUIT:
                 running = False
 
-def initialiseCards():
-    cards = []
-    for type in  ["Clubs", "Diamonds", "Hearts", "Spades"]:
-        for i in range(1, 14):
-            card = Card(type, i)
-            cards.append(card)
-    return cards
+def createDeck() -> list[BaseCard]:
+  deck = []
 
-def main():
+  for suit in Suit:
+    for type in CardType:
+      deck.append(BaseCard(suit, type))
+
+  return deck
+
+if __name__ == "__main__":
     pygame.init()
     start()
-    cards = initialiseCards()
