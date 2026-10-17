@@ -41,20 +41,39 @@ class Card(ABC):
   @abstractmethod
   def type(self) -> CardType: pass
 
-  @property
-  def value(self) -> int:
-    return self.type.num_value
+  @abstractmethod
+  def getValue(self) -> int:
+    pass
+
+  @abstractmethod
+  def setScore(self, newVal) -> None:
+    pass
+
+  @abstractmethod
+  def getScore(self, newVal) -> int:
+    pass
 
 class BaseCard(Card):
   _suit: Suit
   _type: CardType
+  _score: int
 
   def __init__(self, suit: Suit, type: CardType) -> None:
     self._suit = suit
     self._type = type
+    self._score = self.setScore(self.getValue())
 
   def changeCard(self, type: CardType):
     self._type = type
+
+  def getValue(self) -> int:
+    return min(self._type.num_value, 10)
+
+  def setScore(self, newVal) -> None:
+    self._score = newVal
+
+  def getScore(self):
+    return self._score
 
   def applyEffect(self) -> None:
     return super().applyEffect()

@@ -1,5 +1,6 @@
 import pygame
-from blackjack import Blackjack
+from card import BaseCard, Suit, CardType
+from effect import EffectDec, BaseValueEffect, MultEffect, AddEffect
 
 def start():
     pygame.init()
@@ -7,10 +8,17 @@ def start():
     screen = pygame.display.set_mode((width, height))
     pygame.display.flip()
 
-    game = Blackjack()
-    print(game.player, game.dealer)
-    game.newHand()
-    print(game.player, game.dealer)
+    deck = createDeck()
+    wildDeck = createWildDeck()
+    print(deck[0].getScore())
+    wildCard(wildDeck,0,deck[0])
+    print(deck[0].getScore())
+
+    print(deck[1].getScore())
+    wildCard(wildDeck,1,deck[1])
+    print(deck[1].getScore())
+    
+    print(list(str(card) for card in deck))
 
     running = True
     while running:
