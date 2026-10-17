@@ -58,3 +58,30 @@ def score_flash_animation (score, timer, font):
     text = font.render(str(score), True, colour)
 
     return text 
+
+
+def result_animation(result, size, font):
+
+    if result == "win":
+        message = "YOU WON !!!"
+        colour = (0, 255, 0)
+        
+    elif result == "loss":
+        message = "you lost, mb :\"
+        colour = (255. 0, 0)
+        
+    else: 
+        return None 
+
+    text = font.render(message, True, colour)
+
+    width = int(text.get_width() * size / 20)
+    height = int(text.get_height() * size / 20)
+        
+    width = max(1, width)
+    height = max(1, height)
+
+    text = pygame.transform.scale(text, (width, height))
+    
+    return text 
+    
