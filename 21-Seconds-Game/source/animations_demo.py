@@ -26,7 +26,7 @@ target_x = 300
 target_y = 300
 
 card_back = pygame.Surface((80, 120))
-card_back.fill(40, 70, 180))
+card_back.fill((40, 70, 180))
 
 card_front = pygame.Surface((80, 120))
 card_front.fill(WHITE)
