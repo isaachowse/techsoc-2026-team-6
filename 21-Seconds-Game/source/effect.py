@@ -3,7 +3,10 @@ from card import BaseCard, CardType, Suit
 
 class BaseEffect(BaseCard):
   _card: BaseCard
-  modifier: int
+  """The card wrapped by the effect."""
+
+  _modifier: int
+  """The amount applied by the effect."""
 
   def __init__(self, card: BaseCard) -> None:
     self._card = card
@@ -16,13 +19,18 @@ class BaseEffect(BaseCard):
   def type(self) -> CardType:
     return self._card.type
 
+  @property
+  def modifier(self) -> int:
+    """The amount applied by the effect."""
+    return self._modifier
+
   def __str__(self) -> str:
     return f"{self._card} [{self.__class__.__name__}({self.modifier}) = {self.score}]"
 
 class MultEffect(BaseEffect):
   def __init__(self, card: BaseCard, multiplier: int):
     super().__init__(card)
-    self.modifier = multiplier
+    self._modifier = multiplier
 
   @property
   def score(self) -> int:
@@ -31,7 +39,7 @@ class MultEffect(BaseEffect):
 class AddEffect(BaseEffect):
   def __init__(self, card: BaseCard, toAdd: int):
       super().__init__(card)
-      self.modifier = toAdd
+      self._modifier = toAdd
 
   @property
   def score(self):
