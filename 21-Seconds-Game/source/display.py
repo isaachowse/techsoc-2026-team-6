@@ -101,7 +101,6 @@ class Display():
                             running = False
                         elif not standButton.disabled:
                             self.lKey(screen)
-                            gameOver = True
                 if event.type == QUIT:
                     running = False
 
@@ -151,15 +150,6 @@ class Display():
                 screen.blit(self.loadNumber(self._game.hits), (500, 150))
                 screen.blit(self.loadNumber(self._game.stands), (500, 200))
                 
-                if not revealed:
-                    self.dealerCards(screen, self._game.dealer._cards)
-                else:
-                    self.flipDealersCards(screen, self._game.dealer._cards)
-                    self.calculateWinner(
-                        screen,
-                        int(self._game.player.score),
-                        int(self._game.dealer.score),
-                    )
                 self.displayScore(screen, int(self._game.player.score), 750, 330)
 
             pygame.display.update()
@@ -171,16 +161,8 @@ class Display():
         pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav").play()
 
     def lKey(self, screen):
+        self._game.stand()
         pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/stand_1.wav").play()
-        self.dealerThinks(screen)
-        while self._game.dealer.score < 17:
-            self._game.hit(self.dealer)
-            deal_sound = random.randint(1, 3)
-            pygame.mixer.Sound(
-                f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav"
-            ).play()
-            self.dealerCards(screen, self._game.dealer._cards)
-            self.dealerThinks(screen)
 
     def loadCardImage(self, card):
         suit = card.suit.name.lower() + "s"
@@ -222,18 +204,8 @@ class Display():
         screen.blit(original, (0, 0))
         pygame.display.update()
 
-    def dealerCards(self, screen, cards):
-        dealerOffset = 0
-        for card in cards:
-            imagePath = f"21-Seconds-Game/assets/Cards/PNG/cards-large/card_back.png"
-            cardImage = pygame.image.load(imagePath).convert_alpha()
-            cardImage = pygame.transform.scale(
-                cardImage, (int(cardImage.get_width()), int(cardImage.get_height()))
-            )
-            screen.blit(cardImage, (500 + dealerOffset, 100))
-            dealerOffset += 25
-
     def displayScore(self, screen, score, x, y):
+        scoreOffset = 0
         scoreImage = pygame.image.load(
             "21-Seconds-Game/assets/Score.png"
         ).convert_alpha()
@@ -243,25 +215,12 @@ class Display():
         )
         screen.blit(scoreImage, (x, y))
 
-        scoreTen = score // 10
-        scoreOne = score % 10
-        if scoreTen > 0:
-            screen.blit(self.loadNumber(scoreTen), (x + 150, y))
-            screen.blit(self.loadNumber(scoreOne), (x + 175, y))
-        else:
-            screen.blit(self.loadNumber(score), (x + 150, y))
-
-    def flipDealersCards(self, screen, cards):
-        dealerOffset = 0
-        for card in cards:
-            cardImage = self.loadCardImage(card)
-            cardImage = pygame.transform.scale(
-                cardImage,
-                (int(cardImage.get_width() * 0.5), int(cardImage.get_height()) * 0.5),
-            )
-            screen.blit(cardImage, (500 + dealerOffset, 100))
-            dealerOffset += 25
-        self.displayScore(screen, self._game.dealer.score, 750, 100)
+        score = str(score)
+        while score != "":
+            current = str(score[0])
+            screen.blit(self.loadNumber(current), (x + 150 + scoreOffset, y))
+            score = score[1 :]
+            scoreOffset += 25
 
     def calculateWinner(self, screen, playerScore, dealerScore):
         win = pygame.image.load("21-Seconds-Game/assets/Win.png").convert_alpha()
