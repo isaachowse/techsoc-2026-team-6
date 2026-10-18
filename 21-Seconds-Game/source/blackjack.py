@@ -25,7 +25,7 @@ class Hand:
       total -= CardType.ACE.num_value
       aces -= 1
 
-    return total
+    return total - 1
 
   def __str__(self) -> str:
     return f"{list(map(str, self._cards))} ({self.score})"
@@ -76,8 +76,7 @@ class Blackjack:
 
     #check if next card should be wildcard
     self.setWild(self.isNextWild())
-    if self.stands == 0:
-      self.hits = 5
+    self.stands -=1
     if self.stands > 0:
       if self.getWild() == True:
         localWild = self.getWildDeck()[self.getCurrentWildCard()]
@@ -92,12 +91,12 @@ class Blackjack:
         self._deck.pop()
       #check if next card should be wildcard
       self.setWild(self.isNextWild())
-      self.stands -= 1
+    if self.stands == 0:
+        self.hits = 5
     self.winCheck()
 
   def hit(self, hand: Hand) -> None:
-    if self.hits == 0:
-      self.stands = 1
+    self.hits -= 1
     if self.hits > 0:
       if self.getWild() == False:
         card = self._deck.pop()
@@ -110,10 +109,10 @@ class Blackjack:
       else:
         card = self._deck[0]
         card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
-      self.hits -= 1
-
       #check if next card should be wildcard
       self.setWild(self.isNextWild())
+    if self.hits == 0:
+      self.stands = 1
     self.winCheck()
 
   def getWildDeck(self) -> list[int]:
