@@ -25,7 +25,7 @@ class Hand:
         aces = sum(1 for card in self._cards if card.type == CardType.ACE)
 
         while total > 21 and aces > 0:
-            total -= CardType.ACE.num_value
+            total -= CardType.ACE.num_value - 1
             aces -= 1
 
         return total
