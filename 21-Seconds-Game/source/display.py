@@ -3,7 +3,7 @@ from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack
 import card
-from animations import move_card, flip_card, button_animation, score_flash_animation, result_animation 
+from animations import move_card, flip_card, button_animation, score_flash_animation, result_animation
 import random, time
 
 class Display():
@@ -18,7 +18,7 @@ class Display():
 
     def start(self):
         pygame.init()
-        
+
         (width, height) = (1000, 500)
         screen = pygame.display.set_mode((width, height))
         backgroundColour = [53, 101, 77]
@@ -54,6 +54,8 @@ class Display():
 
         running = True
         while running:
+            hitButton.set_disabled(self.player.value >= self.blackjack.bust_value)
+
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_a:
@@ -62,7 +64,7 @@ class Display():
                             pygame.mixer.music.play()
                             homeScreen = False
                         elif not hitButton.disabled and not gameOver:
-                            self.aKey()
+                            self.aKey(screen)
                         elif gameOver and not revealed:
                             revealed = True
                         elif revealed:
@@ -87,10 +89,6 @@ class Display():
                 playButton.draw(screen)
                 exitButton.draw(screen)
             else:
-                screen.blit(hitsImage, (0, 150))
-                screen.blit(standsImage, (0, 200))
-                screen.blit(self.loadNumber(self.blackjack.hits), (400, 150))
-                screen.blit(self.loadNumber(self.blackjack.stands), (450, 200))
                 pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
                 screen.blit(dealerImage, (400, 0))
                 if not gameOver:
@@ -101,9 +99,6 @@ class Display():
                 else:
                     playButton.draw(screen)
                     exitButton.draw(screen)
-
-                hitButton.set_disabled(self.blackjack.hits==0 or self.blackjack.stands==0)
-                standButton.set_disabled(self.blackjack.stands==0)
 
                 bigOffset = 0
                 smallOffset = 0
@@ -135,9 +130,8 @@ class Display():
             pygame.display.update()
         pygame.quit()
 
-    def aKey(self):
+    def aKey(self, screen):
         self.blackjack.hit(self.player)
-        self.blackjack.hits = self.blackjack.hits
         deal_sound = random.randint(1, 3)
         pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
         pygame.mixer.music.play()
@@ -154,7 +148,7 @@ class Display():
             pygame.mixer.music.play()
             self.dealerCards(screen, self.blackjack.dealer._cards)
             self.dealerThinks(screen)
-        
+
 
     def loadCardImage(self, card):
         suit = card.suit.name.lower() + "s"
@@ -222,11 +216,11 @@ class Display():
         self.displayScore(screen, self.blackjack.dealer.value, 750, 100)
 
     def calculateWinner(self, screen, playerScore, dealerScore):
-        win = pygame.image.load("21-Seconds-Game/assets/win.png").convert_alpha()
+        win = pygame.image.load("21-Seconds-Game/assets/Win.png").convert_alpha()
         win = pygame.transform.scale(win, (int(win.get_width())*7, int(win.get_height())*7))
-        lose = pygame.image.load("21-Seconds-Game/assets/lose.png").convert_alpha()
+        lose = pygame.image.load("21-Seconds-Game/assets/Lose.png").convert_alpha()
         lose = pygame.transform.scale(lose, (int(lose.get_width())*7, int(lose.get_height())*7))
-        draw = pygame.image.load("21-Seconds-Game/assets/draw.png").convert_alpha()
+        draw = pygame.image.load("21-Seconds-Game/assets/Draw.png").convert_alpha()
         draw = pygame.transform.scale(draw, (int(draw.get_width())*7, int(draw.get_height())*7))
         if playerScore <= 21 and (playerScore > dealerScore or dealerScore > 21):
             screen.blit(win, (0, 0))
