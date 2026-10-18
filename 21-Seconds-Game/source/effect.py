@@ -1,7 +1,7 @@
 from abc import ABC
 from card import Card, CardType, Suit
 
-class EffectDec(Card):
+class BaseEffect(Card):
   _card: Card
   modifier: int
 
@@ -19,7 +19,7 @@ class EffectDec(Card):
   def __str__(self) -> str:
     return f"{self._card} [{self.__class__.__name__}({self.modifier}) = {self.score}]"
 
-class MultEffect(EffectDec):
+class MultEffect(BaseEffect):
   def __init__(self, card: Card, multiplier: int):
     super().__init__(card)
     self.modifier = multiplier
@@ -28,7 +28,7 @@ class MultEffect(EffectDec):
   def score(self) -> int:
     return self._card.score * self.modifier
 
-class AddEffect(EffectDec):
+class AddEffect(BaseEffect):
   def __init__(self, card: Card, toAdd: int):
       super().__init__(card)
       self.modifier = toAdd
