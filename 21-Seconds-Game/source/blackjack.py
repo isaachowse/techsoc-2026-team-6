@@ -76,7 +76,8 @@ class Blackjack:
 
     #check if next card should be wildcard
     self.setWild(self.isNextWild())
-
+    if self.stands == 0:
+      self.hits = 5
     if self.stands > 0:
       if self.getWild() == True:
         localWild = self.getWildDeck()[self.getCurrentWildCard()]
@@ -91,14 +92,12 @@ class Blackjack:
         self._deck.pop()
       #check if next card should be wildcard
       self.setWild(self.isNextWild())
-
-    if self.stands == 0:
-          self.hits += 5
-    self.stands -= 1
+      self.stands -= 1
     self.winCheck()
 
   def hit(self, hand: Hand) -> None:
-    
+    if self.hits == 0:
+      self.stands = 1
     if self.hits > 0:
       if self.getWild() == False:
         card = self._deck.pop()
@@ -114,10 +113,7 @@ class Blackjack:
 
       #check if next card should be wildcard
       self.setWild(self.isNextWild())
-    
-    if self.hits == 0:
-      self.stands += 1
-    self.hits -= 1
+      self.hits -= 1
     self.winCheck()
 
   def getWildDeck(self) -> list[int]:
