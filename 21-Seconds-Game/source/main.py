@@ -6,6 +6,5 @@ from display import Display
 
 if __name__ == "__main__":
     game = Blackjack()
-    print(list(map(str, game._deck)), game.bust_value)
     display = Display(game)
     display.start()
