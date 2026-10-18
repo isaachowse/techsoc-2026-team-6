@@ -107,7 +107,7 @@ class Display:
                     elif event.key == K_l:
                         if (homeScreen and not exitButton.disabled) or revealed:
                             running = False
-                        elif not standButton.disabled:
+                        elif not standButton.disabled and not gameOver:
                             self.lKey(screen)
                             gameOver = True
                 if event.type == QUIT:
