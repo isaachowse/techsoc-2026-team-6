@@ -186,7 +186,7 @@ class Blackjack:
     return False
 
   def winCheck(self):
-    if self.getRoundScore():
+    if self.getRoundScore() == self.getBJVal():
       return True
     return False
   
