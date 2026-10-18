@@ -17,7 +17,7 @@ class Hand:
     return copy
 
   @property
-  def value(self) -> int:
+  def score(self) -> int:
     total = sum(card.score for card in self._cards)
     aces = sum(1 for card in self._cards if card.type == CardType.ACE)
 
@@ -28,72 +28,167 @@ class Hand:
     return total
 
   def __str__(self) -> str:
-    return f"{list(map(str, self._cards))} ({self.value})"
-
-
-def _wildCard(card: Card, i: int) -> Card:
-  wildDeck = [5,2,15,4,30,8,300,16,600,24,1000]
-
-  if i > len(wildDeck) - 1:
-    return card
-  elif (i % 2 == 0):
-    return AddEffect(card, wildDeck[i])
-  return MultEffect(card, wildDeck[i])
+    return f"{list(map(str, self._cards))} ({self.score})"
 
 class Blackjack:
-  dealer: Hand
   player: Hand
+  _wild: bool
   hits: int
   stands: int
-
   _deck: list[Card]
+  _baseDeck: list[Card]
+  _wildDeck: list[int]
   _wildcard_count: int
+  _cur_WildCard: int
+  _roundCount: int
+  _roundScore: int
+  _bjVal: int
 
   def __init__(self) -> None:
-    self.dealer = Hand()
     self.player = Hand()
     self.hits = 5
     self.stands = 1
-    self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    self._roundCount = 0
+    self._roundScore = 0
+    self._bjVal = 21
+    self._baseDeck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    self._deck = self._baseDeck.copy()
     self._wildcard_count = 0
+    self._cur_WildCard = 0
+    self._wildDeck = self.createWildDeck()
+    self._wild = False
     self.newHand()
+    
 
   def newHand(self) -> None:
-    for hand in (self.player, self.dealer):
-      self._deck.extend(hand.empty())
-
-    # make one a wildcard
-    card = self._deck.pop(random.randint(0, len(self._deck) - 1))
-    wildcard = _wildCard(card, self._wildcard_count)
-    self._wildcard_count += 1
-    self._deck.append(wildcard)
+    self.setRoundScore(0)
+    self.setRoundCount(self.getRoundScore()+1)
+    self._deck = self._baseDeck.copy()
+    self.player.empty()
 
     # shuffle and deal
-    random.shuffle(self._deck)
+    self.shuffle(self._deck)
 
-    for hand in (self.player, self.dealer):
-      self.hit(hand)
-      self.hit(hand)
+    self.hit(self.player)
+    self.hit(self.player)
+
+  def stand(self, hand:Hand) -> None:
+
+    #check if next card should be wildcard
+    self.setWild(self.isNextWild())
+
+    if self.stands > 0:
+      if self.getWild() == True:
+        localWild = self.getWildDeck()[self.getCurrentWildCard()]
+        if self.getCurrentWildCard() % 2 == 0:
+          self.setBJVal(self.getBJVal() + localWild)
+        else:
+          self.setBJVal(self.getBJVal() * localWild)
+      else:    
+        #check if deck is empty
+        if self.checkDeck() == False:
+          self.newHand()
+        self._deck.pop()
+      #check if next card should be wildcard
+      self.setWild(self.isNextWild())
+
+    if self.stands == 0:
+          self.hits += 5
+
+    self.winCheck()
 
   def hit(self, hand: Hand) -> None:
+    
+    if self.hits > 0:
+      if self.getWild() == False:
+        card = self._deck.pop()
+        self.setRoundScore(self.getRoundScore()+card.score)
+        print(self.getRoundScore())
+        hand.add(card)
+        #check if deck is empty
+        if self.checkDeck() == False:
+          self.newHand()
+      else:
+        card = self._deck[0]
+        card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
+
+      #check if next card should be wildcard
+      self.setWild(self.isNextWild())
+    
     if self.hits == 0:
-      return
-
-    card = self._deck.pop()
-    hand.add(card)
-    self.hits -= 1
-
-    if self.hit == 0:
-      self.hits = 5
       self.stands += 1
 
-  def stand(self) -> None:
-    if self.stands == 0:
-      return
+    self.winCheck()
 
-    self.stands -= 1
-    self.hits += 5
+  def getWildDeck(self) -> list[int]:
+    return self._wildDeck
 
+  def getRoundScore(self) -> int:
+    return self._roundScore
+
+  def setRoundScore(self, newVal) -> None:
+    self._roundScore = newVal
+
+  def getRoundCount(self) -> int:
+    return self._roundCount
+
+  def setRoundCount(self, newVal) -> None:
+    self._roundCount = newVal
+
+  def getBJVal(self) -> int:
+      return self._bjVal
+  
+  def setBJVal(self, newVal) -> None:
+      self._bjVal = newVal
+
+  def getWild(self) -> bool:
+    return self._wild
+
+  def setWild(self, newBool) -> None:
+    self._wild = newBool
+
+  def getCurrentWildCard(self) -> int:
+      return self._cur_WildCard
+
+  def setCurrentWildCard(self, newVal:int) -> None:
+    self._cur_WildCard = newVal
+
+  def checkDeck(self) -> bool:
+    if self._deck:
+      return True
+    return False
+
+  def _deal(self) -> None:
+    self.player.reset()
+    self.hit(self.player)
+    self.hit(self.player)
+
+  def wildCard(self, wildDeck:list[int], wildCard:int, nextCard:BaseCard) -> None:
+    if (wildCard % 2 == 0):
+       return AddEffect(nextCard,wildDeck[wildCard])
+    return MultEffect(nextCard,wildDeck[wildCard])
+
+  def createWildDeck(self) -> list[int]:
+    return [5,2,10,3,20,4,50,5,100,6,300,10]
+
+  def shuffle(self, deck:list[BaseCard]) -> list[BaseCard]:
+    for i in range(len(deck)-1,0,-1):
+        j = random.randint(0,i)
+        deck[i],deck[j]=deck[j],deck[i]
+    return deck
+
+  def isNextWild(self) -> bool:
+    if random.randint(0,4) == 1:
+      self.setCurrentWildCard(random.randint(0,11))
+      return True
+    return False
+
+  def winCheck(self):
+    if self.getRoundScore() == self.getBJVal():
+      print("win")
+      return True
+    return False
+  
   @property
   def bust_value(self) -> int:
     return 21 + (sum(wild.modifier for wild in self._deck if issubclass(wild.__class__, AddEffect)) * (1 + sum(wild.modifier for wild in self._deck if issubclass(wild.__class__, MultEffect)))) # type: ignore

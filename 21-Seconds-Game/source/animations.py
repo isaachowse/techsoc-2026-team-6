@@ -36,16 +36,16 @@ def flip_card (card_back, card_front, progress):
 
     new_width = max(1, new_width)
 
-    flipped_card = pygame.transform.scale(image(new_width, height))
+    flipped_card = pygame.transform.scale(image, (new_width, height))
 
 
 def button_animation (screen, button, colour, glowing):
 
     if glowing:
         glow = button. inflate(15, 15)
-        pygame.draw.rect(screen, button, glow, border_radius=12)
+        pygame.draw.rect(screen, colour, glow, border_radius=12)
 
-    pygame.draw.react(screen, button, glow, border_radius=10)
+    pygame.draw.react(screen, colour, glow, border_radius=10)
 
 
 def score_flash_animation (score, timer, font):
@@ -60,13 +60,13 @@ def score_flash_animation (score, timer, font):
     return text 
 
 
-def result_animation(result, size, font):
+def result_animation(result, font, size):
 
     if result == "win":
         message = "YOU WON !!!"
         colour = (0, 255, 0)
         
-    elif result == "loss":
+    elif result == "lose":
         message = "you lost, mb :("
         colour = (255, 0, 0)
         
