@@ -91,6 +91,8 @@ class Blackjack:
         self._deck.pop()
       #check if next card should be wildcard
       self.setWild(self.isNextWild())
+      self.stands -= 1
+      self.hits = 5
 
     if self.stands == 0:
           self.hits += 5
@@ -111,6 +113,7 @@ class Blackjack:
       else:
         card = self._deck[0]
         card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
+      self.hits -= 1
 
       #check if next card should be wildcard
       self.setWild(self.isNextWild())
