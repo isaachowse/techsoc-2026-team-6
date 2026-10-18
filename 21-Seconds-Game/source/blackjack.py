@@ -17,7 +17,7 @@ class Hand:
     return copy
 
   @property
-  def value(self) -> int:
+  def score(self) -> int:
     total = sum(card.score for card in self._cards)
     aces = sum(1 for card in self._cards if card.type == CardType.ACE)
 
@@ -28,7 +28,7 @@ class Hand:
     return total
 
   def __str__(self) -> str:
-    return f"{list(map(str, self._cards))} ({self.value})"
+    return f"{list(map(str, self._cards))} ({self.score})"
 
 class Blackjack:
   player: Hand
