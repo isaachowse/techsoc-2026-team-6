@@ -3,7 +3,7 @@ from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack, Hand
 from card import BaseCard
-import random, time
+import random
 
 
 class Display:
@@ -221,7 +221,7 @@ class Display:
             thoughtImage = self.loadThought((i % 3) + 1)
             screen.blit(thoughtImage, (475, -20))
             pygame.display.update()
-            time.sleep(0.3)
+            pygame.time.wait(300)
         screen.blit(original, (0, 0))
         pygame.display.update()
 
