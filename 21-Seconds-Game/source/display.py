@@ -2,7 +2,6 @@ import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack
-from animations import move_card, flip_card, button_animation, score_flash_animation, result_animation 
 import card
 from animations import move_card, flip_card, button_animation, score_flash_animation, result_animation 
 import random, time
@@ -28,9 +27,6 @@ class Display():
         gameOver = False
         revealed = False
 
-        team6 = dealerImage = pygame.image.load("21-Seconds-Game/assets/Team6.png").convert_alpha()
-        team6 = pygame.transform.scale(team6, (int(team6.get_width())*10, int(team6.get_height())*10))
-
         playImage = pygame.image.load("21-Seconds-Game/assets/Buttons/play-button.png").convert_alpha()
         exitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/exit-button.png").convert_alpha()
         hitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/hit-button.png").convert_alpha()
@@ -45,6 +41,14 @@ class Display():
 
         dealerImage = pygame.image.load("21-Seconds-Game/assets/Dealer.png").convert_alpha()
         dealerImage = pygame.transform.scale(dealerImage, (int(dealerImage.get_width())*0.3, int(dealerImage.get_height())*0.3))
+
+        team6 = pygame.image.load("21-Seconds-Game/assets/Team6.png").convert_alpha()
+        team6 = pygame.transform.scale(team6, (int(team6.get_width())*10, int(team6.get_height())*10))
+
+        hitsImage = pygame.image.load("21-Seconds-Game/assets/HitsRemaining.png").convert_alpha()
+        hitsImage = pygame.transform.scale(hitsImage, (int(hitsImage.get_width())*5, int(hitsImage.get_height())*5))
+        standsImage = pygame.image.load("21-Seconds-Game/assets/StandsRemaining.png").convert_alpha()
+        standsImage = pygame.transform.scale(standsImage, (int(standsImage.get_width())*5, int(standsImage.get_height())*5))
 
         pygame.display.flip()
 
@@ -122,19 +126,12 @@ class Display():
                         screen.blit(cardImage, (0 + bigOffset, 265))
                         bigOffset += 100
 
-<<<<<<< Updated upstream
-                pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
-                hitButton.draw(screen)
-                standButton.draw(screen)
-                screen.blit(dealerImage, (400, 0))
-=======
                 if not revealed:
                     self.dealerCards(screen, self.blackjack.dealer._cards)
                 else:
                     self.flipDealersCards(screen, self.blackjack.dealer._cards)
                     self.calculateWinner(screen, int(self.blackjack.player.value), int(self.blackjack.dealer.value))
                 self.displayScore(screen, int(self.blackjack.player.value), 750, 330)
->>>>>>> Stashed changes
             pygame.display.update()
         pygame.quit()
 
@@ -170,8 +167,6 @@ class Display():
         cardImage = pygame.image.load(imagePath).convert_alpha()
         cardImage = pygame.transform.scale(cardImage, (int(cardImage.get_width())*2, int(cardImage.get_height())*2))
         return cardImage
-<<<<<<< Updated upstream
-=======
 
     def loadNumber(self, number):
         imagePath = f"21-Seconds-Game/assets/Numbers/{number}.png"
@@ -239,4 +234,3 @@ class Display():
             screen.blit(lose, (0, 0))
         else:
             screen.blit(draw, (0, 0))
->>>>>>> Stashed changes

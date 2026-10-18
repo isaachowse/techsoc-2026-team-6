@@ -90,12 +90,8 @@ class Blackjack:
     if self.stands == 0:
           self.hits += 5
 
-<<<<<<< Updated upstream
   def getWild(self) -> bool:
     return self._wild
-=======
-    self.stands -= 1
->>>>>>> Stashed changes
 
   def setWild(self, newBool) -> None:
     self._wild = newBool
@@ -112,22 +108,19 @@ class Blackjack:
     return False
 
   def hit(self, hand: Hand) -> None:
+    if hand is self.player and self.hits == 0:
+      return
 
-    #check if next card should be wildcard
+    card = self._deck.pop()
+    hand.add(card)
+
+    if hand is self.player:
+      self.hits -= 1
+
     self.setWild(self.isNextWild())
 
-    #check if deck is empty
-    if self.checkDeck() == False:
-      self.newHand()
-
-    if self.getWild() == False:
-      card = self._deck.pop()
-      hand.add(card)
-    else:
-      card = self._deck.pop()
-      card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
-      hand.add(card)
-    if self.hits == 0:
+    if self.hit == 0:
+      self.hits = 5
       self.stands += 1
 
   def _deal(self) -> None:
