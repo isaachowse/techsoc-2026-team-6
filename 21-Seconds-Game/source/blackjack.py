@@ -110,6 +110,7 @@ class Blackjack:
       else:
         card = self._deck[0]
         card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
+      self.hits -= 1
 
       #check if next card should be wildcard
       self.setWild(self.isNextWild())

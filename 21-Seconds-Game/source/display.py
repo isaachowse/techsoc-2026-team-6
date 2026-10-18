@@ -119,8 +119,8 @@ class Display():
                 if not gameOver:
                     hitButton.draw(screen)
                     standButton.draw(screen)
-                elif not revealed:
-                    revealButton.draw(screen)
+                    hitButton.setDisabled(self._game.hits == 0)
+                    standButton.setDisabled(self._game.stands == 0)
                 else:
                     playButton.draw(screen)
                     exitButton.draw(screen)
@@ -157,7 +157,8 @@ class Display():
         pygame.quit()
 
     def aKey(self, screen):
-        self._game.hit(self.player)
+        if self._game.hits > 0:
+            self._game.hit(self.player)
         deal_sound = random.randint(1, 3)
         pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav").play()
 
