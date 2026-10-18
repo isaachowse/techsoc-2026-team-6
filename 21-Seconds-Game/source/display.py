@@ -12,7 +12,6 @@ class Display():
     def __init__(self, blackjack):
         self._game = blackjack
         self.player = self._game.player
-        self.dealer = self._game.dealer
 
     def display_card(self, card):
         return card
@@ -163,7 +162,7 @@ class Display():
         pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav").play()
 
     def lKey(self, screen):
-        self._game.stand()
+        self._game.stand(self.player)
         pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/stand_1.wav").play()
 
     def loadCardImage(self, card):
