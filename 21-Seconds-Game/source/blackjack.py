@@ -114,7 +114,6 @@ class Blackjack:
 
       #check if next card should be wildcard
       self.setWild(self.isNextWild())
-      self.hits -= 1
     self.winCheck()
 
   def getWildDeck(self) -> list[int]:
