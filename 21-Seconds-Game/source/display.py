@@ -72,6 +72,10 @@ class Display:
             (int(standsImage.get_width()) * 5, int(standsImage.get_height()) * 5),
         )
 
+        pygame.mixer.music.load("21-Seconds-Game/sounds/music/ost_home.mp3")
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.2)
+
         pygame.display.flip()
 
         running = True
@@ -82,11 +86,16 @@ class Display:
                 if event.type == KEYDOWN:
                     if event.key == K_a:
                         if homeScreen and not playButton.disabled:
-                            pygame.mixer.music.load(
+                            pygame.mixer.Sound(
                                 "21-Seconds-Game/sounds/sfx/press_1.wav"
-                            )
-                            pygame.mixer.music.play()
+                            ).play()
                             homeScreen = False
+
+                            pygame.mixer.music.load(
+                                "21-Seconds-Game/sounds/music/ost.mp3"
+                            )
+                            pygame.mixer.music.play(-1)
+                            pygame.mixer.music.set_volume(0.2)
                         elif not hitButton.disabled and not gameOver:
                             self.aKey(screen)
                         elif gameOver and not revealed:
@@ -162,18 +171,17 @@ class Display:
     def aKey(self, screen):
         self._game.hit(self.player)
         deal_sound = random.randint(1, 3)
-        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
-        pygame.mixer.music.play()
+        pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav").play()
 
     def lKey(self, screen):
-        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
-        pygame.mixer.music.play()
+        pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/stand_1.wav").play()
         self.dealerThinks(screen)
         while self._game.dealer.score < 17:
             self._game.hit(self.dealer)
             deal_sound = random.randint(1, 3)
-            pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
-            pygame.mixer.music.play()
+            pygame.mixer.Sound(
+                f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav"
+            ).play()
             self.dealerCards(screen, self._game.dealer._cards)
             self.dealerThinks(screen)
 
