@@ -3,7 +3,7 @@ from card import Card, CardType, Suit
 
 class EffectDec(Card):
   _card: Card
-  _modifier: int
+  modifier: int
 
   def __init__(self, card: Card) -> None:
     self._card = card
@@ -17,22 +17,22 @@ class EffectDec(Card):
     return self._card.type
 
   def __str__(self) -> str:
-    return f"{self._card} [{self.__class__.__name__}({self._modifier}) = {self.score}]"
+    return f"{self._card} [{self.__class__.__name__}({self.modifier}) = {self.score}]"
 
 class MultEffect(EffectDec):
   def __init__(self, card: Card, multiplier: int):
     super().__init__(card)
-    self._modifier = multiplier
+    self.modifier = multiplier
 
   @property
   def score(self) -> int:
-    return self._card.score * self._modifier
+    return self._card.score * self.modifier
 
 class AddEffect(EffectDec):
   def __init__(self, card: Card, toAdd: int):
       super().__init__(card)
-      self._modifier = toAdd
+      self.modifier = toAdd
 
   @property
   def score(self):
-    return self._card.score + self._modifier
+    return self._card.score + self.modifier
