@@ -1,54 +1,107 @@
 import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
+import time
 from button import Button
+from blackjack import Blackjack
+import card
+import random  
 
-def start():
-    pygame.init()
-    (width, height) = (1000, 500)
-    screen = pygame.display.set_mode((width, height))
-    backgroundColour = [53, 101, 77]
+class Display():
 
-    homeScreen = True
+    def __init__(self, blackjack):
+        self.blackjack = blackjack
+        self.player = self.blackjack.player
+        self.dealer = self.blackjack.dealer
 
-    playImage = pygame.image.load("21-Seconds-Game/assets/Buttons/play-button.png").convert_alpha()
-    exitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/exit-button.png").convert_alpha()
-    hitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/hit-button.png").convert_alpha()
-    standImage = pygame.image.load("21-Seconds-Game/assets/Buttons/stand-button.png").convert_alpha()
+    def display_card(self, card):
+        return card
 
-    playButton = Button(150, 250, playImage, 6)
-    exitButton = Button(550, 250, exitImage, 6)
-    hitButton = Button(150, 350, hitImage, 6)
-    standButton = Button(550, 350, standImage, 6)
-    buttons = [playButton, exitButton, hitButton, standButton]
+    def start(self):
+        pygame.init()
+        
+        (width, height) = (1000, 500)
+        screen = pygame.display.set_mode((width, height))
+        backgroundColour = [53, 101, 77]
 
-    pygame.display.flip()
+        homeScreen = True
 
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                if event.key == K_a:
-                    homeScreen = not homeScreen
-                elif event.key == K_l:
+        playImage = pygame.image.load("21-Seconds-Game/assets/Buttons/play-button.png").convert_alpha()
+        exitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/exit-button.png").convert_alpha()
+        hitImage = pygame.image.load("21-Seconds-Game/assets/Buttons/hit-button.png").convert_alpha()
+        standImage = pygame.image.load("21-Seconds-Game/assets/Buttons/stand-button.png").convert_alpha()
+
+        playButton = Button(150, 250, playImage, 6)
+        exitButton = Button(550, 250, exitImage, 6)
+        hitButton = Button(150, 388, hitImage, 6)
+        standButton = Button(550, 388, standImage, 6)
+        buttons = [playButton, exitButton, hitButton, standButton]
+
+        pygame.mixer.music.load("21-Seconds-Game/sounds/music/ost_home.mp3")
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.2)
+
+        pygame.display.flip()
+
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == KEYDOWN:
+                    if event.key == K_a:
+                        if homeScreen:
+                            press_sound = pygame.mixer.Sound("21-Seconds-Game/sounds/sfx/press_1.wav")
+                            press_sound.play()
+                            homeScreen = False
+                            pygame.mixer.music.load("21-Seconds-Game/sounds/music/ost.mp3")
+                            pygame.mixer.music.play(-1)
+                            pygame.mixer.music.set_volume(0.2)
+                        else:
+                            self.aKey()
+                    elif event.key == K_l:
+                        if homeScreen:
+                            running = False
+                        else:
+                            self.lKey()
+                if event.type == QUIT:
                     running = False
-            if event.type == QUIT:
-                running = False
 
-        screen.fill(backgroundColour)
+            screen.fill(backgroundColour)
 
-        if homeScreen:
-            playButton.draw(screen)
-            exitButton.draw(screen)
-        else:
-            loadGameScreen(screen, buttons)
-        pygame.display.update()
-    pygame.quit()
+            if homeScreen:
+                playButton.draw(screen)
+                exitButton.draw(screen)
+            else:
+                offset = 0
+                for card in self.blackjack.player._cards:
+                    newCard = self.display_card(card)
+                    cardImage = self.loadCardImage(newCard)
+                    screen.blit(cardImage, (100 + offset, 100))
+                    offset += 100
+                pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
+                hitButton.draw(screen)
+                standButton.draw(screen)
 
-def loadGameScreen(screen, buttons):
-    buttons[2].draw(screen)
-    buttons[3].draw(screen)
-    pygame.display.update()
+            pygame.display.update()
+        pygame.quit()
 
+    def aKey(self):
+        self.blackjack.hit(self.player)
+        deal_sound = random.randint(1, 3)
+        deal_sound = pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
+        deal_sound.play()
 
+    def lKey(self):
+        #self.blackjack.stand(self.player)
+        stand_sound = pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
+        stand_sound.play()
 
-start()
+    def loadCardImage(self, card):
+        suit = card.suit.name.lower() + "s"
+        try:
+            int(card.type.value)
+            type = f"{int(card.type.value):02d}"
+        except ValueError:
+            type = card.type.value[0].upper()
+        imagePath = f"21-Seconds-Game/assets/Cards/PNG/cards-large/card_{suit}_{type}.png"
+        cardImage = pygame.image.load(imagePath).convert_alpha()
+        cardImage = pygame.transform.scale(cardImage, (int(cardImage.get_width())*2, int(cardImage.get_height())*2))
+        return cardImage

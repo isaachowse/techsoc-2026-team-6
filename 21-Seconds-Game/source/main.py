@@ -1,23 +1,11 @@
-import pygame
+import pygame, random
 from blackjack import Blackjack
-
-def start():
-    pygame.init()
-    (width, height) = (1000, 500)
-    screen = pygame.display.set_mode((width, height))
-    pygame.display.flip()
-
-    game = Blackjack()
-    print(game.player, game.dealer)
-    game.newHand()
-    print(game.player, game.dealer)
-
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+from card import BaseCard, Suit, CardType
+from effect import MultEffect, AddEffect
+from display import Display
 
 if __name__ == "__main__":
-    pygame.init()
-    start()
+    game = Blackjack()
+    print(game.dealer, game.player)
+    display = Display(game)
+    display.start()
