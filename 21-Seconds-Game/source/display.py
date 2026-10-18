@@ -8,10 +8,9 @@ import random
 
 class Display():
 
-    def __init__(self, blackjack):
+    def __init__(self, blackjack:Blackjack):
         self.blackjack = blackjack
         self.player = self.blackjack.player
-        self.dealer = self.blackjack.dealer
 
     def display_card(self, card):
         return card
@@ -55,7 +54,7 @@ class Display():
                         if homeScreen and not exitButton.disabled:
                           running = False
                         elif not standButton.disabled:
-                          ...
+                          self.lKey()
                 if event.type == QUIT:
                     running = False
 
@@ -100,7 +99,7 @@ class Display():
         pygame.mixer.music.play()
 
     def lKey(self):
-        #self.blackjack.stand(self.player)
+        self.blackjack.stand(self.player)
         pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
         pygame.mixer.music.play()
 

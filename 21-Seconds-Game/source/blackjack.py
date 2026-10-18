@@ -31,12 +31,12 @@ class Hand:
     return f"{list(map(str, self._cards))} ({self.value})"
 
 class Blackjack:
-  dealer: Hand
   player: Hand
   _wild: bool
   hits: int
   stands: int
   _deck: list[Card]
+  _baseDeck: list[Card]
   _wildDeck: list[int]
   _wildcard_count: int
   _cur_WildCard: int
@@ -45,30 +45,79 @@ class Blackjack:
   _bjVal: int
 
   def __init__(self) -> None:
-    self.dealer = Hand()
     self.player = Hand()
     self.hits = 5
     self.stands = 1
-    self._deck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    self._roundCount = 0
+    self._roundScore = 0
+    self._bjVal = 21
+    self._baseDeck = [BaseCard(suit, type) for type in CardType for suit in Suit]
+    self._deck = self._baseDeck.copy()
     self._wildcard_count = 0
     self._cur_WildCard = 0
     self._wildDeck = self.createWildDeck()
+    self._wild = False
     self.newHand()
     
 
   def newHand(self) -> None:
-    for hand in (self.player, self.dealer):
-      self._deck.extend(hand.empty())
-
-    # make one a wildcard
-    self.setWild(self.isNextWild())
+    self.setRoundScore(0)
+    self.setRoundCount(self.getRoundScore()+1)
+    self._deck = self._baseDeck.copy()
+    self.player.empty()
 
     # shuffle and deal
     self.shuffle(self._deck)
 
-    for hand in (self.player, self.dealer):
-      self.hit(hand)
-      self.hit(hand)
+    self.hit(self.player)
+    self.hit(self.player)
+
+  def stand(self, hand:Hand) -> None:
+
+    #check if next card should be wildcard
+    self.setWild(self.isNextWild())
+
+    if self.stands > 0:
+      if self.getWild() == True:
+        localWild = self.getWildDeck()[self.getCurrentWildCard()]
+        if self.getCurrentWildCard() % 2 == 0:
+          self.setBJVal(self.getBJVal() + localWild)
+        else:
+          self.setBJVal(self.getBJVal() * localWild)
+      else:    
+        #check if deck is empty
+        if self.checkDeck() == False:
+          self.newHand()
+        self._deck.pop()
+      #check if next card should be wildcard
+      self.setWild(self.isNextWild())
+
+    print("BJVal")
+    print(self.getBJVal())
+
+    if self.stands == 0:
+          self.hits += 5
+
+  def hit(self, hand: Hand) -> None:
+    
+    if self.hits > 0:
+      if self.getWild() == False:
+        card = self._deck.pop()
+        self.setRoundScore(self.getRoundScore()+card.score)
+        print(self.getRoundScore())
+        hand.add(card)
+        #check if deck is empty
+        if self.checkDeck() == False:
+          self.newHand()
+      else:
+        card = self._deck[0]
+        card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
+
+      #check if next card should be wildcard
+      self.setWild(self.isNextWild())
+    
+    if self.hits == 0:
+      self.stands += 1
 
   def getWildDeck(self) -> list[int]:
     return self._wildDeck
@@ -90,38 +139,6 @@ class Blackjack:
   
   def setBJVal(self, newVal) -> None:
       self._bjVal = newVal
-  
-  def hit(self, hand: Hand) -> None:
-    if self.hits == 0:
-      return
-
-    card = self._deck.pop()
-    hand.add(card)
-    self.hits -= 1
-
-    self.setWild(self.isNextWild())
-
-    if self.hit == 0:
-      self.hits = 5
-      self.stands += 1
-
-  def stand(self) -> None:
-
-    #check if next card should be wildcard
-    self.setWild(self.isNextWild())
-
-    if self.getWild() == True:
-      localWild = self.getWildDeck()[self.getCurrentWildCard()]
-      if self.getCurrentWildCard % 2 == 0:
-        self.setBJVal(self.getBJVal + localWild)
-      else:
-        self.setBJVal(self.getBJVal * localWild)
-
-    print("BJVal")
-    print(self.getBJVal())
-
-    if self.stands == 0:
-          self.hits += 5
 
   def getWild(self) -> bool:
     return self._wild
@@ -140,30 +157,10 @@ class Blackjack:
       return True
     return False
 
-  def hit(self, hand: Hand) -> None:
-
-    #check if next card should be wildcard
-    self.setWild(self.isNextWild())
-
-    #check if deck is empty
-    if self.checkDeck() == False:
-      self.newHand()
-
-    if self.getWild() == False:
-      card = self._deck.pop()
-      hand.add(card)
-    else:
-      card = self._deck.pop()
-      card = self.wildCard(self.getWildDeck(),self.getCurrentWildCard(),card)
-      hand.add(card)
-    if self.hits == 0:
-      self.stands += 1
-
   def _deal(self) -> None:
-    for hand in (self.player, self.dealer):
-      hand.reset()
-      self.hit(hand)
-      self.hit(hand)
+    self.player.reset()
+    self.hit(self.player)
+    self.hit(self.player)
 
   def wildCard(self, wildDeck:list[int], wildCard:int, nextCard:BaseCard) -> None:
     if (wildCard % 2 == 0):
@@ -171,7 +168,7 @@ class Blackjack:
     return MultEffect(nextCard,wildDeck[wildCard])
 
   def createWildDeck(self) -> list[int]:
-    return [5,2,15,3,30,4,300,5,600,6,800,12]
+    return [5,2,10,3,20,4,50,5,100,6,300,10]
 
   def shuffle(self, deck:list[BaseCard]) -> list[BaseCard]:
     for i in range(len(deck)-1,0,-1):
@@ -187,6 +184,7 @@ class Blackjack:
 
   def winCheck(self):
     if self.getRoundScore() == self.getBJVal():
+      print("win")
       return True
     return False
   
