@@ -1,5 +1,6 @@
 import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
+import time
 from button import Button
 from blackjack import Blackjack
 from animations import move_card, flip_card, button_animation, score_flash_animation, result_animation 
@@ -37,6 +38,15 @@ class Display():
         dealerImage = pygame.image.load("21-Seconds-Game/assets/Dealer.png").convert_alpha()
         dealerImage = pygame.transform.scale(dealerImage, (int(dealerImage.get_width())*0.3, int(dealerImage.get_height())*0.3))
 
+        hitsImage = pygame.image.load("21-Seconds-Game/assets/HitsRemaining.png").convert_alpha()
+        hitsImage = pygame.transform.scale(hitsImage, (int(hitsImage.get_width())*5, int(hitsImage.get_height())*5))
+        standsImage = pygame.image.load("21-Seconds-Game/assets/StandsRemaining.png").convert_alpha()
+        standsImage = pygame.transform.scale(standsImage, (int(standsImage.get_width())*5, int(standsImage.get_height())*5))
+
+        pygame.mixer.music.load("21-Seconds-Game/sounds/music/ost_home.mp3")
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.2)
+
         pygame.display.flip()
 
         running = True
@@ -45,9 +55,12 @@ class Display():
                 if event.type == KEYDOWN:
                     if event.key == K_a:
                         if homeScreen and not playButton.disabled:
-                            pygame.mixer.music.load("21-Seconds-Game/sounds/sfx/press_1.wav")
-                            pygame.mixer.music.play()
+                            press_sound = pygame.mixer.Sound("21-Seconds-Game/sounds/sfx/press_1.wav")
+                            press_sound.play()
                             homeScreen = False
+                            pygame.mixer.music.load("21-Seconds-Game/sounds/music/ost.mp3")
+                            pygame.mixer.music.play(-1)
+                            pygame.mixer.music.set_volume(0.2)
                         elif not hitButton.disabled:
                             self.aKey()
                     elif event.key == K_l:
@@ -85,6 +98,10 @@ class Display():
                         screen.blit(cardImage, (0 + bigOffset, 265))
                         bigOffset += 100
 
+                screen.blit(hitsImage, (0, 150))
+                screen.blit(standsImage, (0, 200))
+                screen.blit(self.loadNumber(self.blackjack.hits), (500, 150))
+                screen.blit(self.loadNumber(self.blackjack.stands), (500, 200))
                 pygame.draw.rect(screen, (112, 145, 127), pygame.Rect(0, 400, 1000, 130))
                 hitButton.draw(screen)
                 standButton.draw(screen)
@@ -95,13 +112,13 @@ class Display():
     def aKey(self):
         self.blackjack.hit(self.player)
         deal_sound = random.randint(1, 3)
-        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
-        pygame.mixer.music.play()
+        deal_sound = pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
+        deal_sound.play()
 
     def lKey(self):
         self.blackjack.stand(self.player)
-        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
-        pygame.mixer.music.play()
+        stand_sound = pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
+        stand_sound.play()
 
     def loadCardImage(self, card):
         suit = card.suit.name.lower() + "s"
@@ -114,3 +131,9 @@ class Display():
         cardImage = pygame.image.load(imagePath).convert_alpha()
         cardImage = pygame.transform.scale(cardImage, (int(cardImage.get_width())*2, int(cardImage.get_height())*2))
         return cardImage
+
+    def loadNumber(self, number):
+        imagePath = f"21-Seconds-Game/assets/Numbers/{number}.png"
+        numberImage = pygame.image.load(imagePath).convert_alpha()
+        numberImage = pygame.transform.scale(numberImage, (int(numberImage.get_width())*5, int(numberImage.get_height())*5))
+        return numberImage
