@@ -1,29 +1,36 @@
 import pygame
+from pygame.rect import Rect
+from pygame.surface import Surface
 
 class Button():
-    def __init__(self, x, y, image, scale):
-        width = image.get_width()
-        height = image.get_height()
-        self.image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x, y)
-        self.clicked = False
+  _image: Surface
+  _rect: Rect
+  disabled: bool
 
-    def draw(self, surface):
-        action = False
-        pos = pygame.mouse.get_pos()
+  def __init__(self, x: int, y: int, image: Surface, scale: float):
+      width = image.get_width()
+      height = image.get_height()
 
-        if self.rect.collidepoint(pos):
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked = True
-                action = True
+      self._image = pygame.transform.scale(image, (int(width * scale), int(height * scale)))
+      self._rect = self._image.get_rect()
+      self._rect.topleft = (x, y)
+      self.disabled = False
 
-        if pygame.mouse.get_pressed()[0] == 0:
-            self.clicked = False
+  def draw(self, surface: Surface):
+      action = False
+      image = self._image.copy()
 
-        surface.blit(self.image, (self.rect.x, self.rect.y))
+      if self.disabled:
+        dark = Surface((self._image.get_width(), self._image.get_height()), flags=pygame.SRCALPHA)
+        dark.fill((100, 100, 100, 0))
+        image.blit(dark, (0, 0), special_flags=pygame.BLEND_RGBA_SUB)
 
-        return action
+      surface.blit(image, (self._rect.x, self._rect.y))
 
-    def remove(self, surface):
-        surface.blit(pygame.Surface((self.rect.width, self.rect.height)), (self.rect.x, self.rect.y))
+      return action
+
+  def set_disabled(self, disabled: bool) -> None:
+    self.disabled = disabled
+
+  def remove(self, surface: Surface):
+      surface.blit(Surface((self._rect.width, self._rect.height)), (self._rect.x, self._rect.y))
