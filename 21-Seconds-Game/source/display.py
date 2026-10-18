@@ -1,5 +1,6 @@
 import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
+import time
 from button import Button
 from blackjack import Blackjack
 from animations import move_card, flip_card, button_animation, score_flash_animation, result_animation 
@@ -43,6 +44,10 @@ class Display():
         standsImage = pygame.image.load("21-Seconds-Game/assets/StandsRemaining.png").convert_alpha()
         standsImage = pygame.transform.scale(standsImage, (int(standsImage.get_width())*5, int(standsImage.get_height())*5))
 
+        pygame.mixer.music.load("21-Seconds-Game/sounds/music/ost_home.mp3")
+        pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.2)
+
         pygame.display.flip()
 
         running = True
@@ -51,9 +56,12 @@ class Display():
                 if event.type == KEYDOWN:
                     if event.key == K_a:
                         if homeScreen and not playButton.disabled:
-                            pygame.mixer.music.load("21-Seconds-Game/sounds/sfx/press_1.wav")
-                            pygame.mixer.music.play()
+                            press_sound = pygame.mixer.Sound("21-Seconds-Game/sounds/sfx/press_1.wav")
+                            press_sound.play()
                             homeScreen = False
+                            pygame.mixer.music.load("21-Seconds-Game/sounds/music/ost.mp3")
+                            pygame.mixer.music.play(-1)
+                            pygame.mixer.music.set_volume(0.2)
                         elif not hitButton.disabled:
                             self.aKey()
                     elif event.key == K_l:
@@ -105,13 +113,13 @@ class Display():
     def aKey(self):
         self.blackjack.hit(self.player)
         deal_sound = random.randint(1, 3)
-        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
-        pygame.mixer.music.play()
+        deal_sound = pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/deal_{deal_sound}.wav")
+        deal_sound.play()
 
     def lKey(self):
         #self.blackjack.stand(self.player)
-        pygame.mixer.music.load(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
-        pygame.mixer.music.play()
+        stand_sound = pygame.mixer.Sound(f"21-Seconds-Game/sounds/sfx/stand_1.wav")
+        stand_sound.play()
 
     def loadCardImage(self, card):
         suit = card.suit.name.lower() + "s"
