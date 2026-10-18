@@ -66,6 +66,8 @@ class Blackjack:
     for hand in (self.player, self.dealer):
       self.hit(hand)
       self.hit(hand)
+    self.hits = 5
+    self.stands = 1
 
   def getWildDeck(self) -> list[int]:
     return self._wildDeck
