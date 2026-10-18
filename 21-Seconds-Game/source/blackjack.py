@@ -46,7 +46,7 @@ class Blackjack:
 
   def __init__(self) -> None:
     self.player = Hand()
-    self.hits = 5
+    self.hits = 7
     self.stands = 1
     self._roundCount = 0
     self._roundScore = 0
@@ -94,7 +94,7 @@ class Blackjack:
 
     if self.stands == 0:
           self.hits += 5
-
+    self.stands -= 1
     self.winCheck()
 
   def hit(self, hand: Hand) -> None:
@@ -117,7 +117,7 @@ class Blackjack:
     
     if self.hits == 0:
       self.stands += 1
-
+    self.hits -= 1
     self.winCheck()
 
   def getWildDeck(self) -> list[int]:
