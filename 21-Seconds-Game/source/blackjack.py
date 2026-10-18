@@ -42,6 +42,7 @@ class Blackjack:
   _cur_WildCard: int
   _roundCount: int
   _roundScore: int
+  _bjVal: int
 
   def __init__(self) -> None:
     self.dealer = Hand()
@@ -83,6 +84,12 @@ class Blackjack:
 
   def setRoundCount(self, newVal) -> None:
     self._roundCount = newVal
+
+  def getBJVal(self) -> int:
+      return self._bjVal
+  
+  def setBJVal(self, newVal) -> None:
+      self._bjVal = newVal
   
   def hit(self, hand: Hand) -> None:
     if self.hits == 0:
@@ -99,6 +106,20 @@ class Blackjack:
       self.stands += 1
 
   def stand(self) -> None:
+
+    #check if next card should be wildcard
+    self.setWild(self.isNextWild())
+
+    if self.getWild() == True:
+      localWild = self.getWildDeck()[self.getCurrentWildCard()]
+      if self.getCurrentWildCard % 2 == 0:
+        self.setBJVal(self.getBJVal + localWild)
+      else:
+        self.setBJVal(self.getBJVal * localWild)
+
+    print("BJVal")
+    print(self.getBJVal())
+
     if self.stands == 0:
           self.hits += 5
 
@@ -165,7 +186,9 @@ class Blackjack:
     return False
 
   def winCheck(self):
-    if self.getRoundScore()
+    if self.getRoundScore():
+      return True
+    return False
   
   @property
   def bust_value(self) -> int:
