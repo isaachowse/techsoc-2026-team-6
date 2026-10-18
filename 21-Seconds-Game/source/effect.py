@@ -1,11 +1,11 @@
 from abc import ABC
-from card import Card, CardType, Suit
+from card import BaseCard, CardType, Suit
 
-class BaseEffect(Card):
-  _card: Card
+class BaseEffect(BaseCard):
+  _card: BaseCard
   modifier: int
 
-  def __init__(self, card: Card) -> None:
+  def __init__(self, card: BaseCard) -> None:
     self._card = card
 
   @property
@@ -20,7 +20,7 @@ class BaseEffect(Card):
     return f"{self._card} [{self.__class__.__name__}({self.modifier}) = {self.score}]"
 
 class MultEffect(BaseEffect):
-  def __init__(self, card: Card, multiplier: int):
+  def __init__(self, card: BaseCard, multiplier: int):
     super().__init__(card)
     self.modifier = multiplier
 
@@ -29,7 +29,7 @@ class MultEffect(BaseEffect):
     return self._card.score * self.modifier
 
 class AddEffect(BaseEffect):
-  def __init__(self, card: Card, toAdd: int):
+  def __init__(self, card: BaseCard, toAdd: int):
       super().__init__(card)
       self.modifier = toAdd
 

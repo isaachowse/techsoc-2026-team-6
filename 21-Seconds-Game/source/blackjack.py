@@ -1,18 +1,18 @@
-from card import Card, CardType, Suit
+from card import BaseCard, Card, CardType, Suit
 import random
 
 
 class Hand:
-    _cards: list[Card]
+    _cards: list[BaseCard]
 
     def __init__(self) -> None:
         self._cards = []
 
-    def add(self, card: Card) -> None:
+    def add(self, card: BaseCard) -> None:
         """Add a card to the hand."""
         self._cards.append(card)
 
-    def empty(self) -> list[Card]:
+    def empty(self) -> list[BaseCard]:
         """Empty the hand, returning all cards within it."""
         copy = self._cards.copy()
         self._cards.clear()
@@ -41,7 +41,7 @@ class Blackjack:
     _player: Hand
     """The player's hand."""
 
-    _deck: list[Card]
+    _deck: list[BaseCard]
     """The deck of cards."""
 
     def __init__(self) -> None:

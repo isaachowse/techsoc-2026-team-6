@@ -2,7 +2,7 @@ import pygame
 from pygame import QUIT, KEYDOWN, K_a, K_l
 from button import Button
 from blackjack import Blackjack, Hand
-from card import Card
+from card import BaseCard
 import random, time
 
 
@@ -177,7 +177,7 @@ class Display:
             self.dealerCards(screen, self._game.dealer._cards)
             self.dealerThinks(screen)
 
-    def loadCardImage(self, card: Card):
+    def loadCardImage(self, card: BaseCard):
         suit = card.suit.name.lower() + "s"
         try:
             int(card.type.value)

@@ -32,7 +32,7 @@ class CardType(StrEnum):
             return 11 if self == CardType.ACE else 10
 
 
-class Card(ABC):
+class BaseCard(ABC):
     @property
     @abstractmethod
     def suit(self) -> Suit:
@@ -52,7 +52,7 @@ class Card(ABC):
         pass
 
 
-class BaseCard(Card):
+class Card(BaseCard):
     _suit: Suit
     _type: CardType
 
