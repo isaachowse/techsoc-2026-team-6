@@ -92,11 +92,10 @@ class Blackjack:
       #check if next card should be wildcard
       self.setWild(self.isNextWild())
 
-    print("BJVal")
-    print(self.getBJVal())
-
     if self.stands == 0:
           self.hits += 5
+
+    self.winCheck()
 
   def hit(self, hand: Hand) -> None:
     
@@ -118,6 +117,8 @@ class Blackjack:
     
     if self.hits == 0:
       self.stands += 1
+
+    self.winCheck()
 
   def getWildDeck(self) -> list[int]:
     return self._wildDeck
